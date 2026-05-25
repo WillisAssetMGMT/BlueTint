@@ -1,1037 +1,730 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blue Tint Getaway · Houston TX</title>
-  <style>
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0b1826;
-      color: #e8edf3;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── Views ── */
-    .view { display: none; min-height: 100vh; }
-    .view.active { display: block; }
-
-    /* ═══════════════════════════════════════════
-       LANDING PAGE
-    ═══════════════════════════════════════════ */
-    #landing {
-      background: linear-gradient(160deg, #0b1826 0%, #0f2338 50%, #0b1826 100%);
-    }
-
-    /* Stars background */
-    #landing::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 100%),
-        radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.10) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 50% 70%, rgba(255,255,255,0.12) 0%, transparent 100%),
-        radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.08) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.10) 0%, transparent 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .landing-inner { position: relative; z-index: 1; }
-
-    /* Hero */
-    .hero {
-      text-align: center;
-      padding: 64px 24px 40px;
-    }
-    .hero-eyebrow {
-      font-size: 11px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: #5bb8d4;
-      margin-bottom: 14px;
-      font-weight: 600;
-    }
-    .hero-title {
-      font-size: clamp(38px, 9vw, 72px);
-      font-weight: 800;
-      line-height: 1.05;
-      color: #ffffff;
-      letter-spacing: -1px;
-      margin-bottom: 8px;
-    }
-    .hero-title span {
-      background: linear-gradient(135deg, #5bb8d4 0%, #1b6b8a 60%, #3db8d4 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      font-size: clamp(14px, 3vw, 18px);
-      color: #7fa8c0;
-      margin-bottom: 28px;
-      font-weight: 400;
-    }
-    .hero-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .pill {
-      background: rgba(91, 184, 212, 0.12);
-      border: 1px solid rgba(91, 184, 212, 0.25);
-      color: #5bb8d4;
-      padding: 6px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-    }
-    .hero-divider {
-      width: 60px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #1b6b8a, transparent);
-      margin: 32px auto 40px;
-    }
-
-    /* Section label */
-    .section-label {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #4a7a93;
-      margin-bottom: 24px;
-      font-weight: 600;
-    }
-
-    /* Itinerary Cards */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
-      padding: 0 20px 80px;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .itin-card {
-      position: relative;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 20px;
-      padding: 28px 28px 28px 28px;
-      cursor: pointer;
-      transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .itin-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--card-color);
-      border-radius: 20px 20px 0 0;
-      opacity: 0.8;
-    }
-    .itin-card:hover, .itin-card:focus {
-      transform: translateY(-4px);
-      border-color: var(--card-color-dim);
-      background: rgba(255,255,255,0.07);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-      outline: none;
-    }
-    .itin-card:active { transform: translateY(-1px); }
-
-    .card-number {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--card-color);
-      margin-bottom: 8px;
-    }
-    .card-title {
-      font-size: 22px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 6px;
-      letter-spacing: -0.3px;
-    }
-    .card-tagline {
-      font-size: 12.5px;
-      color: #7fa8c0;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-    .card-meta {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 0;
-    }
-    .card-meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .card-meta-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #4a7a93;
-      font-weight: 600;
-    }
-    .card-meta-value {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--card-color);
-    }
-
-    /* The transparent arrow */
-    .card-arrow {
-      position: absolute;
-      right: 22px;
-      bottom: 50%;
-      transform: translateY(50%);
-      font-size: 28px;
-      color: rgba(255,255,255,0.12);
-      transition: color 0.2s ease, transform 0.2s ease, right 0.2s ease;
-      line-height: 1;
-      user-select: none;
-    }
-    .itin-card:hover .card-arrow {
-      color: rgba(255,255,255,0.45);
-      right: 18px;
-    }
-
-    /* Budget note */
-    .budget-note {
-      text-align: center;
-      padding: 0 24px 48px;
-      font-size: 12px;
-      color: #4a7a93;
-      font-style: italic;
-    }
-
-    /* ═══════════════════════════════════════════
-       ITINERARY DETAIL PAGE
-    ═══════════════════════════════════════════ */
-    #detail { background: #0b1826; }
-
-    /* Back bar */
-    .back-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(11, 24, 38, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: none;
-      border: none;
-      color: var(--theme-color, #5bb8d4);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 6px 12px 6px 8px;
-      border-radius: 8px;
-      transition: background 0.15s ease;
-      -webkit-tap-highlight-color: transparent;
-      font-family: inherit;
-    }
-    .back-btn:hover { background: rgba(255,255,255,0.07); }
-    .back-btn svg { flex-shrink: 0; }
-    .back-bar-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.5);
-      margin-left: auto;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Detail hero */
-    .detail-hero {
-      padding: 36px 20px 28px;
-      text-align: center;
-      position: relative;
-    }
-    .detail-hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 50px; height: 2px;
-      background: var(--theme-color, #5bb8d4);
-      border-radius: 2px;
-    }
-    .detail-num {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--theme-color, #5bb8d4);
-      margin-bottom: 8px;
-    }
-    .detail-title {
-      font-size: clamp(28px, 7vw, 44px);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
-    }
-    .detail-tagline {
-      font-size: 13px;
-      color: #7fa8c0;
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto 20px;
-    }
-    .detail-budget-bar {
-      display: inline-flex;
-      gap: 24px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 12px 24px;
-      margin-top: 8px;
-    }
-    .dbb-item { display: flex; flex-direction: column; gap: 2px; }
-    .dbb-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #4a7a93; font-weight: 600; }
-    .dbb-value { font-size: 16px; font-weight: 800; color: var(--theme-color, #5bb8d4); }
-
-    /* Day sections */
-    .days-wrapper {
-      padding: 36px 16px 60px;
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-
-    .day-block {}
-    .day-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .day-badge {
-      background: var(--theme-color, #5bb8d4);
-      color: #fff;
-      font-weight: 800;
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 8px;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .day-date {
-      font-size: 13px;
-      color: #7fa8c0;
-      font-weight: 500;
-    }
-    .day-total {
-      margin-left: auto;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--theme-color, #5bb8d4);
-      white-space: nowrap;
-    }
-
-    /* Activity cards */
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-    .activity-row {
-      background: rgba(255,255,255,0.03);
-      padding: 14px 16px;
-      display: grid;
-      grid-template-columns: 64px 1fr auto;
-      gap: 12px;
-      align-items: start;
-      transition: background 0.15s;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .activity-row:last-child { border-bottom: none; }
-    .activity-row:hover { background: rgba(255,255,255,0.055); }
-
-    .act-time {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: #4a7a93;
-      letter-spacing: 0.3px;
-      padding-top: 2px;
-      line-height: 1.4;
-    }
-    .act-body { display: flex; flex-direction: column; gap: 3px; }
-    .act-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: #e8edf3;
-      line-height: 1.3;
-    }
-    .act-name .emoji { margin-right: 5px; }
-    .act-desc {
-      font-size: 12px;
-      color: #6e96b0;
-      line-height: 1.55;
-    }
-    .act-price {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--theme-color, #5bb8d4);
-      white-space: nowrap;
-      text-align: right;
-      padding-top: 2px;
-    }
-
-    /* Pricing reference table */
-    .ref-section {
-      padding: 0 16px 60px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .ref-title {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #4a7a93;
-      font-weight: 600;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .ref-table {
-      width: 100%;
-      border-collapse: collapse;
-      border-radius: 14px;
-      overflow: hidden;
-      font-size: 12.5px;
-    }
-    .ref-table thead tr { background: rgba(255,255,255,0.08); }
-    .ref-table th {
-      padding: 10px 14px;
-      text-align: left;
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #7fa8c0;
-      font-weight: 600;
-    }
-    .ref-table tbody tr:nth-child(odd)  { background: rgba(255,255,255,0.025); }
-    .ref-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.04); }
-    .ref-table td { padding: 9px 14px; color: #c5d8e6; vertical-align: top; }
-    .ref-table td:first-child { color: #e8edf3; font-weight: 600; }
-    .ref-table td:nth-child(2) { color: #5bb8d4; font-weight: 700; white-space: nowrap; }
-    .ref-table td:last-child { color: #6e96b0; font-size: 11.5px; }
-
-    /* Pro tips */
-    .pro-tips {
-      margin: 24px 0 0;
-      background: rgba(91, 184, 212, 0.07);
-      border: 1px solid rgba(91, 184, 212, 0.18);
-      border-radius: 14px;
-      padding: 18px 20px;
-    }
-    .pro-tips-title {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #5bb8d4;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .pro-tips ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-    .pro-tips li {
-      font-size: 12.5px;
-      color: #7fa8c0;
-      line-height: 1.5;
-      padding-left: 16px;
-      position: relative;
-    }
-    .pro-tips li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: #5bb8d4;
-      font-size: 11px;
-    }
-
-    /* ── Mobile tweaks ── */
-    @media (max-width: 480px) {
-      .hero { padding: 48px 20px 32px; }
-      .cards-grid { grid-template-columns: 1fr; padding: 0 16px 60px; }
-      .activity-row { grid-template-columns: 56px 1fr auto; gap: 8px; padding: 12px; }
-      .ref-table { font-size: 11px; }
-      .ref-table th, .ref-table td { padding: 8px 10px; }
-      .detail-budget-bar { flex-direction: column; gap: 12px; text-align: center; }
-    }
-
-    /* ── Scroll fade-in ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in { animation: fadeUp 0.35s ease both; }
-    .fade-in-1 { animation-delay: 0.05s; }
-    .fade-in-2 { animation-delay: 0.12s; }
-    .fade-in-3 { animation-delay: 0.19s; }
-    .fade-in-4 { animation-delay: 0.26s; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Blue Tint Getaway · Houston TX</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0b1826;color:#e8edf3;min-height:100vh;-webkit-font-smoothing:antialiased}
+.view{display:none;min-height:100vh}.view.active{display:block}
+/* LANDING */
+#landing{background:linear-gradient(160deg,#0b1826 0%,#0f2338 50%,#0b1826 100%)}
+#landing::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.15) 0%,transparent 100%),radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,.10) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 50% 70%,rgba(255,255,255,.12) 0%,transparent 100%);pointer-events:none;z-index:0}
+.landing-inner{position:relative;z-index:1}
+.hero{text-align:center;padding:60px 24px 36px}
+.hero-eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#5bb8d4;margin-bottom:14px;font-weight:600}
+.hero-title{font-size:clamp(36px,9vw,72px);font-weight:800;line-height:1.05;color:#fff;letter-spacing:-1px;margin-bottom:8px}
+.hero-title span{background:linear-gradient(135deg,#5bb8d4 0%,#1b6b8a 60%,#3db8d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(13px,3vw,17px);color:#7fa8c0;margin-bottom:24px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+.pill{background:rgba(91,184,212,.12);border:1px solid rgba(91,184,212,.25);color:#5bb8d4;padding:6px 16px;border-radius:100px;font-size:13px;font-weight:500}
+.hero-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,#1b6b8a,transparent);margin:28px auto 36px}
+.section-label{text-align:center;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#4a7a93;margin-bottom:20px;font-weight:600}
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;padding:0 18px;max-width:860px;margin:0 auto 12px}
+.itin-card{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;cursor:pointer;transition:transform .22s,border-color .22s,background .22s,box-shadow .22s;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.itin-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc);border-radius:20px 20px 0 0;opacity:.8}
+.itin-card:hover,.itin-card:focus{transform:translateY(-3px);border-color:rgba(var(--ccr),.3);background:rgba(255,255,255,.07);box-shadow:0 12px 40px rgba(0,0,0,.4);outline:none}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.card-left{flex:1;min-width:0}
+.card-number{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--cc);margin-bottom:6px}
+.card-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:5px;letter-spacing:-.3px}
+.card-tagline{font-size:12px;color:#7fa8c0;line-height:1.5;margin-bottom:14px}
+.vote-badge{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:8px 12px;flex-shrink:0;min-width:52px;cursor:pointer;transition:background .15s,border-color .15s}
+.vote-badge:hover{background:rgba(255,255,255,.13)}
+.vote-badge.voted{background:rgba(var(--ccr),.18);border-color:var(--cc)}
+.vote-badge .v-icon{font-size:18px;line-height:1}
+.vote-badge .v-count{font-size:16px;font-weight:800;color:var(--cc);line-height:1}
+.vote-badge .v-label{font-size:9px;color:#4a7a93;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.card-meta{display:flex;gap:16px}
+.cml{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#4a7a93;font-weight:600}
+.cmv{font-size:14px;font-weight:700;color:var(--cc)}
+.card-arrow{position:absolute;right:20px;bottom:50%;transform:translateY(50%);font-size:26px;color:rgba(255,255,255,.10);transition:color .2s,right .2s;user-select:none;pointer-events:none}
+.itin-card:hover .card-arrow{color:rgba(255,255,255,.40);right:16px}
+/* TALLY */
+.tally-bar{max-width:860px;margin:2px auto 28px;padding:0 18px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.tally-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:5px 14px;font-size:12px;color:#7fa8c0}
+.tally-chip strong{color:#fff}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* FIREBASE NOTICE */
+.fb-notice{text-align:center;padding:4px 18px 0;font-size:11px;color:#4a7a93;font-style:italic}
+.fb-notice.err{color:#e05c5c}
+/* IDEAS */
+.ideas-section{max-width:860px;margin:0 auto;padding:0 18px 56px}
+.ideas-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:20px;overflow:hidden}
+.ideas-hdr{background:rgba(91,184,212,.08);border-bottom:1px solid rgba(91,184,212,.15);padding:16px 20px;display:flex;align-items:center;gap:10px}
+.ideas-hdr-icon{font-size:20px}
+.ideas-hdr-text h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+.ideas-hdr-text p{font-size:12px;color:#7fa8c0}
+.ideas-form{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:10px}
+.form-row{display:flex;gap:10px}
+.ii{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 13px;color:#e8edf3;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.ii:focus{border-color:rgba(91,184,212,.5)}
+.ii::placeholder{color:#4a7a93}
+.name-ii{width:130px;flex:none;font-size:13px}
+.sub-btn{background:linear-gradient(135deg,#1b6b8a,#1b9ac4);border:none;border-radius:10px;padding:10px 18px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .15s,transform .1s}
+.sub-btn:hover{opacity:.88}
+.sub-btn:active{transform:scale(.97)}
+.sub-btn:disabled{opacity:.4;cursor:default}
+.ideas-list{padding:14px 20px;display:flex;flex-direction:column;gap:10px;min-height:60px}
+.idea-item{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:11px 13px;animation:fadeUp .3s ease both}
+.idea-content{flex:1;min-width:0}
+.idea-text{font-size:14px;color:#e8edf3;line-height:1.4;margin-bottom:4px;word-break:break-word}
+.idea-meta{font-size:11px;color:#4a7a93}
+.idea-meta strong{color:#7fa8c0}
+.like-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:1px solid rgba(255,255,255,.10);border-radius:10px;padding:6px 10px;cursor:pointer;color:#4a7a93;font-family:inherit;transition:background .15s,border-color .15s,color .15s;flex-shrink:0}
+.like-btn:hover{background:rgba(255,100,100,.10);border-color:rgba(255,100,100,.30);color:#ff6b6b}
+.like-btn.liked{background:rgba(255,100,100,.15);border-color:rgba(255,100,100,.40);color:#ff6b6b}
+.like-icon{font-size:14px;line-height:1}
+.like-count{font-size:12px;font-weight:700;line-height:1}
+.ideas-empty{text-align:center;color:#4a7a93;font-size:13px;padding:20px;font-style:italic}
+/* DETAIL */
+#detail{background:#0b1826}
+.back-bar{position:sticky;top:0;z-index:100;background:rgba(11,24,38,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);padding:12px 18px;display:flex;align-items:center;gap:10px}
+.back-btn{display:flex;align-items:center;gap:7px;background:none;border:none;color:var(--tc,#5bb8d4);font-size:14px;font-weight:600;cursor:pointer;padding:6px 12px 6px 8px;border-radius:8px;transition:background .15s;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.back-btn:hover{background:rgba(255,255,255,.07)}
+.back-bar-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-hero{padding:30px 18px 22px;text-align:center;position:relative}
+.detail-hero::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50px;height:2px;background:var(--tc,#5bb8d4);border-radius:2px}
+.dnum{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--tc,#5bb8d4);margin-bottom:8px}
+.dtitle{font-size:clamp(26px,7vw,42px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px}
+.dtagline{font-size:13px;color:#7fa8c0;line-height:1.6;max-width:480px;margin:0 auto 18px}
+.dbudget{display:inline-flex;gap:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:11px 20px;margin-top:8px}
+.dbi{display:flex;flex-direction:column;gap:2px}
+.dbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#4a7a93;font-weight:600}
+.dbv{font-size:16px;font-weight:800;color:var(--tc,#5bb8d4)}
+.days-wrap{padding:30px 14px 36px;max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+.day-hdr{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.day-badge{background:var(--tc,#5bb8d4);color:#fff;font-weight:800;font-size:11px;padding:5px 13px;border-radius:8px;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.day-date{font-size:12px;color:#7fa8c0;font-weight:500}
+.day-total{margin-left:auto;font-size:11px;font-weight:700;color:var(--tc,#5bb8d4);white-space:nowrap}
+.act-list{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
+.act-row{background:rgba(255,255,255,.03);padding:11px 13px;display:grid;grid-template-columns:58px 1fr auto;gap:9px;align-items:center;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+.act-row:last-child{border-bottom:none}
+.act-row:hover{background:rgba(255,255,255,.055)}
+.act-time{font-size:10px;font-weight:600;color:#4a7a93;letter-spacing:.3px;line-height:1.4;align-self:start;padding-top:3px}
+.act-body{display:flex;flex-direction:column;gap:3px;min-width:0}
+.act-name{font-size:13px;font-weight:700;color:#e8edf3;line-height:1.3}
+.act-desc{font-size:11px;color:#6e96b0;line-height:1.5}
+.act-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.act-price{font-size:12px;font-weight:800;color:var(--tc,#5bb8d4);white-space:nowrap}
+.act-votes{display:flex;gap:4px}
+.tb{display:flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:7px;padding:3px 7px;cursor:pointer;font-family:inherit;color:#7fa8c0;font-size:11px;font-weight:700;transition:background .15s,border-color .15s,color .15s;white-space:nowrap}
+.tb:hover{background:rgba(255,255,255,.12);color:#fff}
+.tb.up{background:rgba(39,160,96,.20);border-color:rgba(39,160,96,.50);color:#27a060}
+.tb.dn{background:rgba(192,57,43,.20);border-color:rgba(192,57,43,.50);color:#c0392b}
+/* PRICING TABLE */
+.ref-sec{padding:0 14px 52px;max-width:800px;margin:0 auto}
+.ref-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#4a7a93;font-weight:600;margin-bottom:13px;text-align:center}
+.ref-tbl{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;font-size:11.5px}
+.ref-tbl thead tr{background:rgba(255,255,255,.08)}
+.ref-tbl th{padding:9px 11px;text-align:left;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7fa8c0;font-weight:600}
+.ref-tbl tbody tr:nth-child(odd){background:rgba(255,255,255,.025)}
+.ref-tbl tbody tr:nth-child(even){background:rgba(255,255,255,.04)}
+.ref-tbl td{padding:7px 11px;color:#c5d8e6;vertical-align:top}
+.ref-tbl td:first-child{color:#e8edf3;font-weight:600}
+.ref-tbl td:nth-child(2){color:#5bb8d4;font-weight:700;white-space:nowrap}
+.ref-tbl td:last-child{color:#6e96b0;font-size:10.5px}
+.pro-tips{margin:18px 0 0;background:rgba(91,184,212,.07);border:1px solid rgba(91,184,212,.18);border-radius:14px;padding:15px 17px}
+.pro-tips-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5bb8d4;font-weight:700;margin-bottom:9px}
+.pro-tips ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.pro-tips li{font-size:11.5px;color:#7fa8c0;line-height:1.5;padding-left:15px;position:relative}
+.pro-tips li::before{content:'&#8594;';position:absolute;left:0;color:#5bb8d4;font-size:10px;top:2px}
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeUp .35s ease both}
+.fi1{animation-delay:.05s}.fi2{animation-delay:.12s}.fi3{animation-delay:.19s}.fi4{animation-delay:.26s}
+/* MOBILE */
+@media(max-width:500px){
+  .hero{padding:44px 18px 28px}
+  .cards-grid{grid-template-columns:1fr;padding:0 14px}
+  .act-row{grid-template-columns:50px 1fr auto;gap:7px;padding:10px 11px}
+  .form-row{flex-direction:column}
+  .name-ii{width:100%}
+  .dbudget{flex-direction:column;gap:10px;text-align:center}
+}
+</style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     LANDING VIEW
-══════════════════════════════════════════ -->
+<!-- LANDING -->
 <div id="landing" class="view active">
-  <div class="landing-inner">
-    <div class="hero">
-      <p class="hero-eyebrow">Houston, Texas · Group Trip</p>
-      <h1 class="hero-title">Blue Tint<br><span>Getaway</span></h1>
-      <p class="hero-sub">June 27 – 30, 2026 &nbsp;·&nbsp; 4 Days &nbsp;·&nbsp; Party of 6</p>
-      <div class="hero-pills">
-        <span class="pill">Under $300/day per person</span>
-        <span class="pill">4 Unique Itineraries</span>
-        <span class="pill">Houston, TX</span>
-      </div>
-      <div class="hero-divider"></div>
-    </div>
+<div class="landing-inner">
+<div class="hero">
+  <p class="hero-eyebrow">Houston, Texas &middot; Group Trip</p>
+  <h1 class="hero-title">Blue Tint<br><span>Getaway</span></h1>
+  <p class="hero-sub">June 27 &ndash; 30, 2026 &nbsp;&middot;&nbsp; 4 Days &nbsp;&middot;&nbsp; Party of 6</p>
+  <div class="hero-pills">
+    <span class="pill">Under $300/day per person</span>
+    <span class="pill">4 Unique Itineraries</span>
+    <span class="pill">Houston, TX</span>
+  </div>
+  <div class="hero-divider"></div>
+</div>
 
-    <p class="section-label">Choose Your Vibe</p>
+<p class="section-label">Tap the ballot to vote &nbsp;&middot;&nbsp; Tap the card to explore</p>
 
-    <div class="cards-grid">
-
-      <div class="itin-card fade-in fade-in-1" tabindex="0" role="button"
-           style="--card-color:#1b9ac4; --card-color-dim:rgba(27,154,196,0.3)"
-           onclick="openItinerary(1)" onkeydown="if(event.key==='Enter')openItinerary(1)">
+<div class="cards-grid">
+  <div class="itin-card fi fi1" tabindex="0" role="button" style="--cc:#1b9ac4;--ccr:27,154,196" onclick="openItin(1)" onkeydown="if(event.key==='Enter')openItin(1)">
+    <div class="card-top">
+      <div class="card-left">
         <div class="card-number">Itinerary 01</div>
         <div class="card-title">Culture Vulture</div>
-        <div class="card-tagline">Museums · Gardens · Art · Architecture · Fine Dining</div>
-        <div class="card-meta">
-          <div class="card-meta-item">
-            <span class="card-meta-label">Avg / Day</span>
-            <span class="card-meta-value">~$135</span>
-          </div>
-          <div class="card-meta-item">
-            <span class="card-meta-label">4-Day Total</span>
-            <span class="card-meta-value">~$540</span>
-          </div>
-        </div>
-        <div class="card-arrow">&#8250;</div>
+        <div class="card-tagline">Museums &middot; Gardens &middot; Art &middot; Architecture &middot; Fine Dining</div>
       </div>
+      <div class="vote-badge" id="vb1" onclick="voteItin(event,1)" title="Vote for this itinerary">
+        <span class="v-icon">&#x1F5F3;</span><span class="v-count" id="vc1">0</span><span class="v-label">votes</span>
+      </div>
+    </div>
+    <div class="card-meta">
+      <div><div class="cml">Avg/Day</div><div class="cmv">~$135</div></div>
+      <div><div class="cml">4-Day Total</div><div class="cmv">~$540</div></div>
+    </div>
+    <div class="card-arrow">&#8250;</div>
+  </div>
 
-      <div class="itin-card fade-in fade-in-2" tabindex="0" role="button"
-           style="--card-color:#c0392b; --card-color-dim:rgba(192,57,43,0.3)"
-           onclick="openItinerary(2)" onkeydown="if(event.key==='Enter')openItinerary(2)">
+  <div class="itin-card fi fi2" tabindex="0" role="button" style="--cc:#c0392b;--ccr:192,57,43" onclick="openItin(2)" onkeydown="if(event.key==='Enter')openItin(2)">
+    <div class="card-top">
+      <div class="card-left">
         <div class="card-number">Itinerary 02</div>
         <div class="card-title">Full Throttle</div>
-        <div class="card-tagline">Paintball · Kayaking · Escape Room · Topgolf · Space</div>
-        <div class="card-meta">
-          <div class="card-meta-item">
-            <span class="card-meta-label">Avg / Day</span>
-            <span class="card-meta-value">~$165</span>
-          </div>
-          <div class="card-meta-item">
-            <span class="card-meta-label">4-Day Total</span>
-            <span class="card-meta-value">~$660</span>
-          </div>
-        </div>
-        <div class="card-arrow">&#8250;</div>
+        <div class="card-tagline">Paintball &middot; Kayaking &middot; Escape Room &middot; Topgolf &middot; Space</div>
       </div>
+      <div class="vote-badge" id="vb2" onclick="voteItin(event,2)" title="Vote for this itinerary">
+        <span class="v-icon">&#x1F5F3;</span><span class="v-count" id="vc2">0</span><span class="v-label">votes</span>
+      </div>
+    </div>
+    <div class="card-meta">
+      <div><div class="cml">Avg/Day</div><div class="cmv">~$165</div></div>
+      <div><div class="cml">4-Day Total</div><div class="cmv">~$660</div></div>
+    </div>
+    <div class="card-arrow">&#8250;</div>
+  </div>
 
-      <div class="itin-card fade-in fade-in-3" tabindex="0" role="button"
-           style="--card-color:#d4711a; --card-color-dim:rgba(212,113,26,0.3)"
-           onclick="openItinerary(3)" onkeydown="if(event.key==='Enter')openItinerary(3)">
+  <div class="itin-card fi fi3" tabindex="0" role="button" style="--cc:#d4711a;--ccr:212,113,26" onclick="openItin(3)" onkeydown="if(event.key==='Enter')openItin(3)">
+    <div class="card-top">
+      <div class="card-left">
         <div class="card-number">Itinerary 03</div>
         <div class="card-title">Foodie &amp; Social</div>
-        <div class="card-tagline">Farmers Market · Food Halls · Rooftops · Craft Beer · Tastings</div>
-        <div class="card-meta">
-          <div class="card-meta-item">
-            <span class="card-meta-label">Avg / Day</span>
-            <span class="card-meta-value">~$158</span>
-          </div>
-          <div class="card-meta-item">
-            <span class="card-meta-label">4-Day Total</span>
-            <span class="card-meta-value">~$632</span>
-          </div>
-        </div>
-        <div class="card-arrow">&#8250;</div>
+        <div class="card-tagline">Farmers Market &middot; Food Halls &middot; Rooftops &middot; Craft Beer</div>
       </div>
+      <div class="vote-badge" id="vb3" onclick="voteItin(event,3)" title="Vote for this itinerary">
+        <span class="v-icon">&#x1F5F3;</span><span class="v-count" id="vc3">0</span><span class="v-label">votes</span>
+      </div>
+    </div>
+    <div class="card-meta">
+      <div><div class="cml">Avg/Day</div><div class="cmv">~$158</div></div>
+      <div><div class="cml">4-Day Total</div><div class="cmv">~$632</div></div>
+    </div>
+    <div class="card-arrow">&#8250;</div>
+  </div>
 
-      <div class="itin-card fade-in fade-in-4" tabindex="0" role="button"
-           style="--card-color:#27a060; --card-color-dim:rgba(39,160,96,0.3)"
-           onclick="openItinerary(4)" onkeydown="if(event.key==='Enter')openItinerary(4)">
+  <div class="itin-card fi fi4" tabindex="0" role="button" style="--cc:#27a060;--ccr:39,160,96" onclick="openItin(4)" onkeydown="if(event.key==='Enter')openItin(4)">
+    <div class="card-top">
+      <div class="card-left">
         <div class="card-number">Itinerary 04</div>
         <div class="card-title">Vibe &amp; Flow</div>
-        <div class="card-tagline">Balanced · Active · Cultural · Relaxed · Social · Beautiful</div>
-        <div class="card-meta">
-          <div class="card-meta-item">
-            <span class="card-meta-label">Avg / Day</span>
-            <span class="card-meta-value">~$130</span>
-          </div>
-          <div class="card-meta-item">
-            <span class="card-meta-label">4-Day Total</span>
-            <span class="card-meta-value">~$520</span>
-          </div>
-        </div>
-        <div class="card-arrow">&#8250;</div>
+        <div class="card-tagline">Balanced &middot; Active &middot; Cultural &middot; Relaxed &middot; Social</div>
       </div>
-
+      <div class="vote-badge" id="vb4" onclick="voteItin(event,4)" title="Vote for this itinerary">
+        <span class="v-icon">&#x1F5F3;</span><span class="v-count" id="vc4">0</span><span class="v-label">votes</span>
+      </div>
     </div>
-
-    <p class="budget-note">All prices are estimates per person &nbsp;·&nbsp; Verify current rates before booking &nbsp;·&nbsp; June in Houston is HOT — plan outdoor activities for morning or evening</p>
+    <div class="card-meta">
+      <div><div class="cml">Avg/Day</div><div class="cmv">~$130</div></div>
+      <div><div class="cml">4-Day Total</div><div class="cmv">~$520</div></div>
+    </div>
+    <div class="card-arrow">&#8250;</div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     DETAIL VIEW
-══════════════════════════════════════════ -->
+<div class="tally-bar" id="tally-bar" style="display:none">
+  <div class="tally-chip"><span class="dot" style="background:#1b9ac4"></span><strong id="t1">0</strong>&nbsp;Culture Vulture</div>
+  <div class="tally-chip"><span class="dot" style="background:#c0392b"></span><strong id="t2">0</strong>&nbsp;Full Throttle</div>
+  <div class="tally-chip"><span class="dot" style="background:#d4711a"></span><strong id="t3">0</strong>&nbsp;Foodie &amp; Social</div>
+  <div class="tally-chip"><span class="dot" style="background:#27a060"></span><strong id="t4">0</strong>&nbsp;Vibe &amp; Flow</div>
+</div>
+
+<p class="fb-notice" id="fbn">Connecting to live database&#8230;</p>
+
+<div class="hero-divider" style="margin-top:8px"></div>
+
+<div class="ideas-section">
+  <p class="section-label" style="margin-bottom:16px">&#128161; Idea Board &mdash; drop your suggestions</p>
+  <div class="ideas-card">
+    <div class="ideas-hdr">
+      <span class="ideas-hdr-icon">&#128506;</span>
+      <div class="ideas-hdr-text">
+        <h3>Got a better idea? Put it here.</h3>
+        <p>Everyone sees suggestions in real time &mdash; like the ones you love</p>
+      </div>
+    </div>
+    <div class="ideas-form">
+      <div class="form-row">
+        <input class="ii name-ii" id="iname" type="text" placeholder="Your name (optional)" maxlength="30"/>
+        <input class="ii" id="itext" type="text" placeholder="e.g. &quot;Night kayaking on the bayou&quot;" maxlength="200"/>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="sub-btn" id="sbtn" onclick="submitIdea()">Post Idea &#10022;</button>
+        <span style="font-size:11px;color:#4a7a93">Press Enter to submit</span>
+      </div>
+    </div>
+    <div class="ideas-list" id="ideas-list">
+      <p class="ideas-empty" id="ideas-empty">No ideas yet &mdash; be the first to drop one.</p>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;padding:0 24px 48px;font-size:11px;color:#4a7a93;font-style:italic">
+  Prices are estimates per person &nbsp;&middot;&nbsp; Verify current rates before booking &nbsp;&middot;&nbsp; June in Houston is 95&deg;F+ &mdash; plan outdoor activities for early morning or evening
+</p>
+</div>
+</div>
+
+<!-- DETAIL -->
 <div id="detail" class="view">
-
-  <div class="back-bar">
-    <button class="back-btn" onclick="goBack()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
-      Back
-    </button>
-    <span class="back-bar-title" id="back-bar-title">Blue Tint Getaway</span>
+<div class="back-bar">
+  <button class="back-btn" onclick="goBack()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </button>
+  <span class="back-bar-title" id="bbt">Blue Tint Getaway</span>
+</div>
+<div class="detail-hero">
+  <div class="dnum" id="dnum"></div>
+  <div class="dtitle" id="dtitle"></div>
+  <div class="dtagline" id="dtagline"></div>
+  <div class="dbudget">
+    <div class="dbi"><span class="dbl">Avg Per Day</span><span class="dbv" id="davg"></span></div>
+    <div class="dbi"><span class="dbl">4-Day Total</span><span class="dbv" id="dtot"></span></div>
   </div>
-
-  <div class="detail-hero">
-    <div class="detail-num" id="detail-num">ITINERARY 01</div>
-    <div class="detail-title" id="detail-title">Culture Vulture</div>
-    <div class="detail-tagline" id="detail-tagline"></div>
-    <div class="detail-budget-bar">
-      <div class="dbb-item">
-        <span class="dbb-label">Avg Per Day</span>
-        <span class="dbb-value" id="detail-avg"></span>
-      </div>
-      <div class="dbb-item">
-        <span class="dbb-label">4-Day Total</span>
-        <span class="dbb-value" id="detail-total"></span>
-      </div>
-    </div>
+</div>
+<div class="days-wrap" id="days-wrap"></div>
+<div class="ref-sec">
+  <div class="ref-title">Quick Pricing Reference</div>
+  <table class="ref-tbl">
+    <thead><tr><th>Activity</th><th>$/Person</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Urban Harvest Farmers Market</td><td>Free+spend</td><td>Saturdays only &middot; 8am&ndash;12pm &middot; 2752 Buffalo Speedway</td></tr>
+      <tr><td>Hermann Park Japanese Garden</td><td>FREE</td><td>Daily 9am&ndash;6pm &middot; Near Museum District</td></tr>
+      <tr><td>Buffalo Bayou Cistern Tour</td><td>$15</td><td>Wed&ndash;Sun 10am&ndash;5pm &middot; &ldquo;Undercurrents&rdquo; thru Jan 2027</td></tr>
+      <tr><td>Bayou Bend Collection &amp; Gardens</td><td>$12.50</td><td>Part of MFAH &middot; 14-acre estate &middot; River Oaks</td></tr>
+      <tr><td>Houston Museum of Natural Science</td><td>$25</td><td>+$8 optional Butterfly Center</td></tr>
+      <tr><td>The Menil Collection</td><td>FREE</td><td>Wed&ndash;Sun 11am&ndash;7pm &middot; World-class private museum</td></tr>
+      <tr><td>Rothko Chapel</td><td>FREE</td><td>Daily 10am&ndash;6pm &middot; 14 Rothko paintings</td></tr>
+      <tr><td>Space Center Houston</td><td>$30 online</td><td>+$10 simulators &middot; $10 parking/car split 6 ways</td></tr>
+      <tr><td>Topgolf Houston</td><td>~$9&ndash;11/hr</td><td>1 bay = up to 6 players &middot; Billed per bay per hour</td></tr>
+      <tr><td>Urban War Zone Paintball</td><td>$34.95</td><td>Only field inside 610 loop &middot; All gear included</td></tr>
+      <tr><td>Buffalo Bayou Kayaking</td><td>$35</td><td>1019 Commerce St &middot; Daily 10am&ndash;6pm</td></tr>
+      <tr><td>Escape Room &ndash; Locktopia</td><td>$34.50</td><td>Inner-Loop &middot; Book in advance &middot; Highly rated</td></tr>
+      <tr><td>Escape Room &ndash; The Escape Game</td><td>$37</td><td>Rated #1 in Houston &middot; Book well ahead</td></tr>
+      <tr><td>POST HTX Market</td><td>Free entry</td><td>401 Franklin St &middot; Sun&ndash;Wed 11am&ndash;9pm &middot; Thu&ndash;Sat till 10pm</td></tr>
+      <tr><td>Houston Astros Game</td><td>$25&ndash;60+</td><td>Daikin Park &middot; Verify at mlb.com/astros</td></tr>
+      <tr><td>Axe Throwing</td><td>~$28&ndash;35</td><td>Stumpy&rsquo;s Hatchet House &middot; 1-hr session w/ instruction</td></tr>
+      <tr><td>Saint Arnold Brewing Tour</td><td>~$12&ndash;18</td><td>Texas&rsquo;s oldest craft brewery &middot; Includes tastings</td></tr>
+      <tr><td>Houston Improv Comedy</td><td>~$20&ndash;30</td><td>National touring acts + local talent</td></tr>
+      <tr><td>White Oak Music Hall</td><td>~$15&ndash;30</td><td>Multi-stage &middot; Rooftop has skyline views</td></tr>
+      <tr><td>Main Event Entertainment</td><td>~$30&ndash;45</td><td>Bowling &middot; Laser tag &middot; Arcade &middot; Ropes course</td></tr>
+    </tbody>
+  </table>
+  <div class="pro-tips">
+    <div class="pro-tips-t">Pro Tips</div>
+    <ul>
+      <li>Book escape rooms &amp; upscale restaurants well in advance.</li>
+      <li>Verify Astros home schedule at <strong style="color:#5bb8d4">mlb.com/astros</strong> before choosing your itinerary.</li>
+      <li>June in Houston = 95&deg;F+ and humid. Schedule outdoor activities for early morning or after 6pm.</li>
+      <li>Rideshare (Uber/Lyft) is easy and affordable across all neighborhoods. Skip the rental car stress.</li>
+      <li>CityPASS bundles Space Center + HMNS + Zoo + 2 more for ~$89 &mdash; saves ~52%.</li>
+      <li>The Farmers Market is Saturday-only (June 27). Plan around it if you want that experience.</li>
+    </ul>
   </div>
-
-  <div class="days-wrapper" id="days-wrapper"></div>
-
-  <div class="ref-section">
-    <div class="ref-title">Quick Pricing Reference</div>
-    <table class="ref-table">
-      <thead>
-        <tr>
-          <th>Activity</th>
-          <th>$/Person</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Urban Harvest Farmers Market</td><td>Free + spend</td><td>Saturdays only · 8am–12pm · 2752 Buffalo Speedway</td></tr>
-        <tr><td>Hermann Park Japanese Garden</td><td>FREE</td><td>Daily 9am–6pm · Near Museum District</td></tr>
-        <tr><td>Buffalo Bayou Cistern Tour</td><td>$15</td><td>Wed–Sun 10am–5pm · "Undercurrents" thru Jan 2027</td></tr>
-        <tr><td>Bayou Bend Collection &amp; Gardens</td><td>$12.50</td><td>Part of MFAH · 14-acre estate · River Oaks</td></tr>
-        <tr><td>Houston Museum of Natural Science</td><td>$25</td><td>+$8 optional Butterfly Center add-on</td></tr>
-        <tr><td>The Menil Collection</td><td>FREE</td><td>Wed–Sun 11am–7pm · World-class private museum</td></tr>
-        <tr><td>Rothko Chapel</td><td>FREE</td><td>Daily 10am–6pm · 14 Rothko paintings · Interfaith</td></tr>
-        <tr><td>Space Center Houston</td><td>$30 online</td><td>+$10 simulators · $10 parking/car (split 6 ways)</td></tr>
-        <tr><td>Topgolf Houston</td><td>~$9–11/hr</td><td>1 bay = up to 6 players · Price is per bay per hour</td></tr>
-        <tr><td>Urban War Zone Paintball</td><td>$34.95</td><td>Only field inside 610 loop · All gear included</td></tr>
-        <tr><td>Buffalo Bayou Kayaking</td><td>$35</td><td>1019 Commerce St · Daily 10am–6pm · 1-hr rental</td></tr>
-        <tr><td>Escape Room – Locktopia</td><td>$34.50</td><td>Inner-Loop · Book in advance · Highly rated</td></tr>
-        <tr><td>Escape Room – The Escape Game</td><td>$37</td><td>Rated #1 in Houston · Book well ahead</td></tr>
-        <tr><td>POST HTX Market</td><td>Free entry</td><td>401 Franklin St · Sun–Wed 11am–9pm · Thu–Sat till 10pm</td></tr>
-        <tr><td>Houston Astros Game</td><td>$25–60+</td><td>Daikin Park · Verify home schedule at mlb.com/astros</td></tr>
-        <tr><td>Axe Throwing</td><td>~$28–35</td><td>Stumpy's Hatchet House · 1-hr session w/ instruction</td></tr>
-        <tr><td>Saint Arnold Brewing Tour</td><td>~$12–18</td><td>Texas's oldest craft brewery · Includes tastings</td></tr>
-        <tr><td>Houston Improv Comedy</td><td>~$20–30</td><td>National touring acts + local talent · Fri–Sat shows</td></tr>
-        <tr><td>White Oak Music Hall</td><td>~$15–30</td><td>Multi-stage · Rooftop has skyline views · Check calendar</td></tr>
-        <tr><td>Main Event Entertainment</td><td>~$30–45</td><td>Bowling · Laser tag · Arcade · Ropes course</td></tr>
-      </tbody>
-    </table>
-
-    <div class="pro-tips">
-      <div class="pro-tips-title">Pro Tips</div>
-      <ul>
-        <li>Book escape rooms &amp; upscale restaurants well in advance — they fill up fast on weekends.</li>
-        <li>Verify the Astros home schedule at <strong style="color:#5bb8d4">mlb.com/astros</strong> before choosing your itinerary.</li>
-        <li>June in Houston = 95°F+ and humid. Schedule all outdoor activities for early morning or after 6pm.</li>
-        <li>Rideshare (Uber/Lyft) is easy and affordable across all these neighborhoods. Skip the rental car stress.</li>
-        <li>CityPASS bundles Space Center + HMNS + Zoo + 2 more attractions for ~$89 — saves ~52%.</li>
-        <li>The Farmers Market is Saturday-only (June 27). Plan around it if you want that experience.</li>
-      </ul>
-    </div>
-  </div>
-
+</div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════
-const itineraries = {
-  1: {
-    num: "ITINERARY 01",
-    title: "Culture Vulture",
-    tagline: "Museums · Gardens · History · Architecture · Art · Fine Dining",
-    color: "#1b9ac4",
-    avg: "~$135/person",
-    total: "~$540/person",
-    days: [
-      {
-        label: "DAY 1", date: "SAT · JUN 27",
-        total: "~$118–138 / person",
-        activities: [
-          { time:"8:00 AM", emoji:"🌿", name:"Urban Harvest Farmers Market", desc:"100+ vendors at 2752 Buffalo Speedway. Local produce, artisan goods, pastries, fresh-roasted coffee. Free to enter — budget for bites & buys.", price:"Free + ~$15" },
-          { time:"10:30 AM", emoji:"🌸", name:"Hermann Park Japanese Garden", desc:"1.5-acre tranquil garden with koi ponds, stone lanterns, moon bridge & bamboo groves. One of Houston's most serene hidden gems.", price:"FREE" },
-          { time:"12:30 PM", emoji:"🍽️", name:"Lunch – Museum District", desc:"Try Hugo's (upscale Mexican), Giacomo's Cibo e Vino (Italian) or Reef (Gulf seafood). Neighborhood is walkable and gorgeous.", price:"~$25–35" },
-          { time:"2:00 PM", emoji:"🦕", name:"Houston Museum of Natural Science", desc:"Gem & Mineral Hall, Ancient Egypt exhibit, Fabergé collection, Hall of the Americas. Optional Butterfly Center add-on ($8).", price:"$25 (+$8 opt)" },
-          { time:"5:00 PM", emoji:"💧", name:"Buffalo Bayou Cistern Tour", desc:"Underground 1927 drinking water cistern converted into an immersive art space. Currently showing 'Undercurrents' — a voice-activated light installation. Genuinely surreal.", price:"$15" },
-          { time:"7:00 PM", emoji:"🌆", name:"Dinner – POST HTX Market", desc:"401 Franklin St. Massive food hall inside a historic post office. Wood-fired pizza, Mexico City tacos, coastal ceviches, handmade pasta, craft cocktails.", price:"~$25–35" },
-          { time:"9:00 PM", emoji:"🍹", name:"Rooftop – 77 Degrees or Z on23", desc:"77 Degrees (Midtown) has Caribbean vibes, swings, and killer skyline views. Z on23 at Le Méridien offers 360-degree panoramas.", price:"~$20–25" },
-        ]
-      },
-      {
-        label: "DAY 2", date: "SUN · JUN 28",
-        total: "~$122–157 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🏛️", name:"Bayou Bend Collection & Gardens", desc:"14-acre estate of former Houston philanthropist Ima Hogg. 28 rooms of American decorative arts + extraordinary formal gardens. Part of MFAH.", price:"$12.50" },
-          { time:"11:30 AM", emoji:"🍳", name:"Brunch – River Oaks / Upper Kirby", desc:"Upscale neighborhood with great brunch options. Try Common Bond Bistro, Le Colonial, or Houston legend Ouisie's Table.", price:"~$25–35" },
-          { time:"1:30 PM", emoji:"🎨", name:"The Menil Collection", desc:"One of the world's great private art museums — completely FREE. 16,000+ works spanning Surrealism, Antiquity, Tribal and modern art across a gorgeous campus.", price:"FREE" },
-          { time:"3:30 PM", emoji:"⬛", name:"Rothko Chapel", desc:"14 monumental Mark Rothko paintings inside an octagonal interfaith chapel. Genuinely thought-provoking, meditative, and unlike anything else on Earth.", price:"FREE" },
-          { time:"5:00 PM", emoji:"🏘️", name:"Explore Montrose Neighborhood", desc:"Houston's most eclectic neighborhood. Local boutiques, wild street art, great coffee shops. Just walk and absorb it.", price:"~$0–10" },
-          { time:"7:00 PM", emoji:"🍜", name:"Dinner – Montrose", desc:"Try Underbelly (Chef Chris Shepherd's Houston love letter), Xochi (Oaxacan cuisine), or Uchi Houston (Japanese). Book ahead!", price:"~$45–60" },
-          { time:"9:30 PM", emoji:"😂", name:"Houston Improv Comedy Club", desc:"National touring acts + local talent at Houston's premier comedy venue. A genuinely hilarious way to end the night.", price:"~$20–30" },
-        ]
-      },
-      {
-        label: "DAY 3", date: "MON · JUN 29",
-        total: "~$122–142 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🚀", name:"Space Center Houston", desc:"Official NASA visitor center. See actual moon rocks, astronaut suits, historic Mission Control, and a Saturn V rocket that will make your jaw drop.", price:"$30 online" },
-          { time:"9:00 AM", emoji:"🚗", name:"Parking", desc:"~$10/car split among the group — roughly $2 per person if one car.", price:"~$2" },
-          { time:"12:30 PM", emoji:"🥪", name:"Lunch – On-site or Kemah Boardwalk", desc:"Space Center has a café; alternatively Kemah Boardwalk is 10 min away for waterfront Gulf seafood dining.", price:"~$15–20" },
-          { time:"2:30 PM", emoji:"🕹️", name:"Space Center Simulators", desc:"Astronaut training simulators, VR moon walk experiences, and tram tour to see active NASA facilities up close.", price:"~$10 add-on" },
-          { time:"5:30 PM", emoji:"🔐", name:"Escape Room – Locktopia Houston", desc:"Inner-Loop escape room with highly rated immersive rooms. 60-min puzzle challenge — perfect for your group of 6. Book in advance!", price:"$34.50" },
-          { time:"8:00 PM", emoji:"🍖", name:"Dinner – Houston BBQ or Tex-Mex", desc:"Goode Co. BBQ (James Beard nominated), the iconic Ninfa's on Navigation for fajitas, or Killen's Barbecue if you plan ahead.", price:"~$30–45" },
-        ]
-      },
-      {
-        label: "DAY 4", date: "TUE · JUN 30",
-        total: "~$130–158 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🚣", name:"Buffalo Bayou Kayaking", desc:"Rent kayaks or paddleboards at 1019 Commerce St. Paddle through downtown Houston's waterways with skyline views. 1–2 hrs.", price:"$35" },
-          { time:"11:30 AM", emoji:"☕", name:"Brunch – Houston Heights", desc:"The Heights is Houston's most charming neighborhood. Try Coltivare or Snooze AM Eatery for a relaxed farewell brunch.", price:"~$20–28" },
-          { time:"1:30 PM", emoji:"🎨", name:"East End Street Art Tour", desc:"Houston's East End (EaDo) has some of the most vibrant murals in Texas. Self-guided walk along Harrisburg Blvd. Completely free.", price:"FREE" },
-          { time:"3:30 PM", emoji:"⛳", name:"Topgolf Houston", desc:"1 bay fits all 6 players. Weekend rate ~$50–60/hr per bay = ~$9–11 per person per hour. Include 2 hrs of play, food, and drinks.", price:"~$20 + food" },
-          { time:"7:00 PM", emoji:"🥂", name:"Farewell Dinner", desc:"Go out right: Brennan's of Houston (Creole elegance), Caracol (coastal Mexican), or Tony's (Houston institution since 1965). Make reservations.", price:"~$55–75" },
-        ]
-      }
-    ]
-  },
-
-  2: {
-    num: "ITINERARY 02",
-    title: "Full Throttle",
-    tagline: "Paintball · Kayaking · Escape Room · Topgolf · Space Center · Baseball",
-    color: "#c0392b",
-    avg: "~$165/person",
-    total: "~$660/person",
-    days: [
-      {
-        label: "DAY 1", date: "SAT · JUN 27",
-        total: "~$148–200 / person",
-        activities: [
-          { time:"8:00 AM", emoji:"🌿", name:"Urban Harvest Farmers Market", desc:"Load up on fuel at Houston's best Saturday market. Get breakfast tacos, fresh smoothies, or a proper pastry. You'll need the energy.", price:"Free + ~$15" },
-          { time:"10:30 AM", emoji:"🎯", name:"Urban War Zone Paintball", desc:"The ONLY paintball field inside the 610 loop. Full gear included, unlimited play. Groups of 6 get $34.95/person rate. Expect war, bruises, and laughing until it hurts.", price:"$34.95" },
-          { time:"1:30 PM", emoji:"🍔", name:"Post-Battle Lunch", desc:"Nothing tastes better after paintball than a smash burger. Try Christian's Tailgate, The Burger Joint, or Truth BBQ if you're going big.", price:"~$18–25" },
-          { time:"3:30 PM", emoji:"🚣", name:"Buffalo Bayou Kayaking", desc:"Cool off on the water. Rent kayaks or paddleboards at 1019 Commerce St. Downtown skyline views from water level are a completely different vibe.", price:"$35" },
-          { time:"6:30 PM", emoji:"⚾", name:"Houston Astros Game", desc:"If the Astros are home (verify at mlb.com/astros), Daikin Park is a fantastic stadium. Upper deck ~$25; field level ~$60+. Pure Houston.", price:"$25–60" },
-          { time:"10:00 PM", emoji:"🍻", name:"Post-Game Rooftop", desc:"Head to The Dogwood (Midtown) for a sports bar rooftop, or Reset Rooftop for premium hookah and cocktails with skyline views.", price:"~$20–30" },
-        ]
-      },
-      {
-        label: "DAY 2", date: "SUN · JUN 28",
-        total: "~$133–170 / person",
-        activities: [
-          { time:"7:00 AM", emoji:"🏃", name:"Buffalo Bayou Trail Run", desc:"6+ miles of paved trails along the bayou. Free, beautiful at sunrise, and a great way to see the city before it wakes up. Bike rentals available too (~$15/hr).", price:"Free" },
-          { time:"9:30 AM", emoji:"🍽️", name:"Brunch – POST HTX Market", desc:"Recover with great food from around the world. Get coffee, dim sum, or a proper egg dish. The building itself — a converted post office — is jaw-dropping.", price:"~$20–30" },
-          { time:"11:30 AM", emoji:"⛳", name:"Topgolf", desc:"1 bay fits all 6 of you. Sunday rate ~$50/hr per bay = ~$9/person/hr. Play 2–3 hours, drink cocktails, and trash-talk each other's swings. No golf experience needed.", price:"~$18–28 + food" },
-          { time:"3:00 PM", emoji:"🔐", name:"Escape Room – The Escape Game", desc:"Rated #1 escape room in Houston. Cinematic, high-production rooms where your group must solve puzzles to escape. 60 minutes of pure team chaos.", price:"$37" },
-          { time:"5:30 PM", emoji:"🪓", name:"Axe Throwing", desc:"Houston has multiple axe throwing venues (Stumpy's Hatchet House, Bury the Hatchet). ~$30/person for 1-hour sessions with instruction included.", price:"~$28–35" },
-          { time:"8:00 PM", emoji:"🍺", name:"Sports Bar Dinner", desc:"Watch whatever game is on, eat too much food, and recap the day. Try Pitch 25 Beer Park or The Rustic Houston for massive outdoor space.", price:"~$30–40" },
-        ]
-      },
-      {
-        label: "DAY 3", date: "MON · JUN 29",
-        total: "~$142–188 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🚀", name:"Space Center Houston", desc:"Even the most competitive group will go quiet standing under a Saturn V rocket. 363 feet long. Humans rode it to the moon. Book online to save $5.", price:"$30 online" },
-          { time:"9:00 AM", emoji:"🚗", name:"Parking", desc:"~$10/car split 6 ways.", price:"~$2" },
-          { time:"12:30 PM", emoji:"🌊", name:"Lunch – Kemah Boardwalk", desc:"10 minutes from Space Center. Waterfront dining, arcade games, and a boardwalk vibe. Try Landry's Seafood or grab a shrimp po'boy.", price:"~$20–28" },
-          { time:"3:00 PM", emoji:"🎮", name:"Main Event Entertainment", desc:"Massive entertainment complex with bowling, laser tag, arcade games, billiards, and ropes course. Perfect competitive chaos for a group of 6.", price:"~$30–45" },
-          { time:"7:00 PM", emoji:"🍗", name:"Dinner", desc:"Killen's STQ, Pappas Bros. Steakhouse, or try Peli Peli for South African cuisine — something genuinely different and great.", price:"~$40–55" },
-          { time:"9:30 PM", emoji:"😂", name:"Houston Improv Comedy", desc:"Let a professional comedian roast the whole city while your group recovers. Weekend shows often feature nationally touring acts.", price:"~$20–28" },
-        ]
-      },
-      {
-        label: "DAY 4", date: "TUE · JUN 30",
-        total: "~$139–192 / person",
-        activities: [
-          { time:"8:00 AM", emoji:"🌅", name:"Spotts Park Workout", desc:"Outdoor fitness area along Buffalo Bayou — pull-up bars, balance beams, open field. Free and beautiful in the morning.", price:"FREE" },
-          { time:"9:30 AM", emoji:"🌸", name:"Hermann Park – Pedal Boats & Japanese Garden", desc:"Rent pedal boats on McGovern Lake (~$15/30 min for the boat, fits 4). Then walk through the Japanese Garden. Peaceful before the chaos.", price:"~$8–12" },
-          { time:"11:30 AM", emoji:"🥞", name:"Brunch – Museum District", desc:"Try Local Foods, Snooze AM Eatery, or Juiceland for a lighter healthy farewell brunch.", price:"~$18–25" },
-          { time:"1:30 PM", emoji:"🏎️", name:"Indoor Go-Kart Racing – K1 Speed", desc:"Professional electric karts. Sessions run ~$28–35/person. This will get competitive extremely fast.", price:"~$28–35" },
-          { time:"4:30 PM", emoji:"🏆", name:"Championship Round – You Decide", desc:"Bowling, billiards, or a final round of axe throwing to crown a group champion. One last battle.", price:"~$20–30" },
-          { time:"7:30 PM", emoji:"🥩", name:"Farewell Steakhouse", desc:"Send it off right: Pappas Bros., Doris Metropolitan, or B&B Butchers. Houston has some of the best steakhouses in the country.", price:"~$65–90" },
-        ]
-      }
-    ]
-  },
-
-  3: {
-    num: "ITINERARY 03",
-    title: "Foodie & Social",
-    tagline: "Farmers Market · Food Halls · Culinary Experiences · Rooftops · Craft Beer",
-    color: "#d4711a",
-    avg: "~$158/person",
-    total: "~$632/person",
-    days: [
-      {
-        label: "DAY 1", date: "SAT · JUN 27",
-        total: "~$123–175 / person",
-        activities: [
-          { time:"8:00 AM", emoji:"🥕", name:"Urban Harvest Farmers Market", desc:"This is the real deal — 100+ vendors, incredible local honey, artisan cheeses, handmade bread, fresh peaches, and breakfast tacos. Budget to actually eat here.", price:"Free + ~$20–30" },
-          { time:"10:30 AM", emoji:"☕", name:"Heights Coffee Crawl", desc:"The Houston Heights has a great cluster of independent coffee shops. Try Greenway Coffee, Birdhouse Coffee, or Onion Creek. Walk antique shops between stops.", price:"~$8–12" },
-          { time:"12:30 PM", emoji:"🌺", name:"Hermann Park Japanese Garden", desc:"Detour through the Japanese Garden before lunch. Free, beautiful, and you'll get great photos between food stops.", price:"FREE" },
-          { time:"2:00 PM", emoji:"🌮", name:"POST HTX Market – Afternoon Tasting", desc:"Pick a different region every 30 minutes. The space itself is extraordinary — a 550,000 sq ft adaptive reuse of Houston's historic post office building.", price:"~$30–45" },
-          { time:"5:00 PM", emoji:"🎭", name:"Discovery Green Park", desc:"12-acre urban park with free live music, outdoor art, and a peaceful lagoon. Perfect between eating sessions.", price:"FREE" },
-          { time:"7:00 PM", emoji:"🍸", name:"Dinner – Lawless Spirits & Kitchen", desc:"Historic Rice Hotel in downtown. Sophisticated cocktail bar meets New American cuisine with a terrace overlooking downtown Houston.", price:"~$45–60" },
-          { time:"10:00 PM", emoji:"🌃", name:"77 Degrees Rooftop", desc:"Multi-level rooftop with Caribbean vibes, cabanas, swings, and one of the best views of the Houston skyline. End the night here.", price:"~$20–28" },
-        ]
-      },
-      {
-        label: "DAY 2", date: "SUN · JUN 28",
-        total: "~$110–160 / person",
-        activities: [
-          { time:"10:00 AM", emoji:"🏡", name:"Bayou Bend Collection & Gardens", desc:"Beautiful 14-acre estate with formal gardens and American decorative arts. Worth it for the gardens alone.", price:"$12.50" },
-          { time:"12:00 PM", emoji:"🥂", name:"Brunch – River Oaks", desc:"Houston's most affluent neighborhood. Try Le Colonial (French-Vietnamese fusion), Tony's Sunday brunch, or Ouisie's Table for Southern elegance.", price:"~$35–50" },
-          { time:"2:30 PM", emoji:"🎨", name:"Menil Collection + Rothko Chapel", desc:"Two of Houston's greatest free cultural institutions back-to-back. The Menil is world-class; the Rothko Chapel is genuinely life-altering for some people.", price:"FREE" },
-          { time:"5:00 PM", emoji:"🍺", name:"Saint Arnold Brewing Company Tour", desc:"Texas's oldest craft brewery. Tour includes tastings of flagship and seasonal beers. The beer garden is a great hangout spot afterward.", price:"~$12–18" },
-          { time:"7:30 PM", emoji:"🌶️", name:"Dinner – EaDo (East Downtown)", desc:"Houston's trendiest emerging neighborhood. Try Nancy's Hustle, Mongoose vs. Cobra, or Johnny's Gold Brick for something cool and local.", price:"~$35–50" },
-          { time:"9:30 PM", emoji:"🎤", name:"Live Music – White Oak Music Hall", desc:"Multi-stage outdoor venue in the Heights. Rooftop stage has incredible skyline views. Always something good on weekends.", price:"~$15–30" },
-        ]
-      },
-      {
-        label: "DAY 3", date: "MON · JUN 29",
-        total: "~$158–238 / person",
-        activities: [
-          { time:"9:30 AM", emoji:"👨‍🍳", name:"Cooking Class", desc:"Group cooking classes at Central Market Cooking School, Sur La Table, or book a private chef learning Gulf seafood, Tex-Mex, or Texas BBQ techniques.", price:"~$65–90" },
-          { time:"12:30 PM", emoji:"🍽️", name:"Lunch – Eat What You Made", desc:"Most cooking classes include eating your creations. This is the meal. Included in class price.", price:"Included" },
-          { time:"3:00 PM", emoji:"💧", name:"Buffalo Bayou Cistern", desc:"The 'Undercurrents' installation makes your voice create rippling light patterns across the water surface. Rewards a slow, contemplative visit.", price:"$15" },
-          { time:"4:30 PM", emoji:"🛍️", name:"Heights Antique Row", desc:"19th Street in the Heights is lined with antique dealers, vintage clothing, and local boutiques. Great for group browsing and low-key laughs over old stuff.", price:"~$0–20" },
-          { time:"7:00 PM", emoji:"🍸", name:"Cocktail Hour – Anvil Bar & Refuge", desc:"Anvil is a Houston cocktail institution. They built Houston's cocktail culture. A round here before dinner is mandatory for serious drinkers.", price:"~$18–28" },
-          { time:"8:30 PM", emoji:"🦞", name:"Upscale Farewell Dinner", desc:"Uchi Houston (Japanese), Caracol (coastal Mexican), or Xochi (Oaxacan). All worth the splurge. Book weeks in advance for Uchi.", price:"~$60–85" },
-        ]
-      },
-      {
-        label: "DAY 4", date: "TUE · JUN 30",
-        total: "~$160–207 / person",
-        activities: [
-          { time:"8:30 AM", emoji:"🌮", name:"Breakfast Taco Tour", desc:"Three stops, three different taquerias. Try El Tiempo, Laredo Taqueria, and Las Delicias for a proper Houston breakfast taco smackdown. Vote on the winner.", price:"~$15–22" },
-          { time:"10:30 AM", emoji:"🏛️", name:"Museum of Fine Arts Houston", desc:"MFAH is one of the largest art museums in the US. One of the country's truly great collections.", price:"~$20" },
-          { time:"1:00 PM", emoji:"🥗", name:"Lunch – Midtown", desc:"Underbelly Burger (Chris Shepherd's burger spot), Truth BBQ, or Weights + Measures for a chill afternoon lunch in a great space.", price:"~$18–28" },
-          { time:"3:00 PM", emoji:"🔐", name:"Escape Room", desc:"Locktopia ($34.50) or The Escape Game ($37). End the trip with a team challenge. The competitive energy of a group of 6 friends in a locked room is cinema.", price:"$34.50–37" },
-          { time:"6:00 PM", emoji:"🌆", name:"Sunset – Best Rooftop", desc:"Z on23 at Le Méridien or Spire Bar at Hotel Alessandra for golden hour cocktails. One last skyline moment before dinner.", price:"~$18–25" },
-          { time:"8:00 PM", emoji:"🎉", name:"Progressive Farewell Dinner", desc:"3 stops: Drinks & apps at one spot, mains at a second, dessert at a third. Build your own progressive dinner across Houston's best blocks.", price:"~$55–75" },
-        ]
-      }
-    ]
-  },
-
-  4: {
-    num: "ITINERARY 04",
-    title: "Vibe & Flow",
-    tagline: "Balanced · Active · Cultural · Beautiful · Relaxed · Funny · Social",
-    color: "#27a060",
-    avg: "~$130/person",
-    total: "~$520/person",
-    days: [
-      {
-        label: "DAY 1", date: "SAT · JUN 27",
-        total: "~$110–153 / person",
-        activities: [
-          { time:"8:00 AM", emoji:"🌿", name:"Urban Harvest Farmers Market", desc:"Saturday-only market at 2752 Buffalo Speedway. Grab coffee, pastries, and local produce. Walk slowly. This is the mood-setter for the whole trip.", price:"Free + ~$15" },
-          { time:"10:30 AM", emoji:"🚣", name:"Buffalo Bayou Kayaking", desc:"Paddle Houston's iconic waterway. Downtown skyline, wildlife, murals visible from the water. 1-2 hrs. Rentals at 1019 Commerce St.", price:"$35" },
-          { time:"1:00 PM", emoji:"☕", name:"Lunch – Houston Heights", desc:"Post-paddle, head to The Heights. Stroll Yale or 19th Street. Eat at Coltivare (pizza + garden), Bravery Chef Hall, or grab tacos at Velvet Taco.", price:"~$20–28" },
-          { time:"3:00 PM", emoji:"💧", name:"Buffalo Bayou Cistern", desc:"Same waterway you just paddled, but underground from 1927. The 'Undercurrents' art installation is worth experiencing slowly with good company.", price:"$15" },
-          { time:"5:00 PM", emoji:"🌳", name:"Buffalo Bayou Park Walk", desc:"Stroll the park trails above the cistern. Public art installations, dog spotting, and the best casual views of the Houston skyline. Decompress.", price:"FREE" },
-          { time:"7:30 PM", emoji:"⚾", name:"Astros Game or POST HTX Market", desc:"If the Astros are home: get tickets and go. There's nothing more Houston. If not, POST HTX Market for a global food tour, then a rooftop bar.", price:"$25–60 or $25–35" },
-        ]
-      },
-      {
-        label: "DAY 2", date: "SUN · JUN 28",
-        total: "~$115–165 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🏃", name:"Hermann Park Morning Jog or Bike", desc:"445 acres of parkland, jogging paths, reflection pool, and McGovern Centennial Gardens. Rent bikes at the park (~$15–20/hr). Calm, beautiful, free.", price:"Free or ~$15" },
-          { time:"10:30 AM", emoji:"🌸", name:"Japanese Garden", desc:"After the jog, cool down in the Japanese Garden. Koi ponds, stone paths, bamboo groves. Genuinely restorative.", price:"FREE" },
-          { time:"12:00 PM", emoji:"🥩", name:"Lunch – Museum District", desc:"Local Foods (healthy & fresh), The Pit Room (BBQ), or Black Walnut Café for something comfortable and local.", price:"~$18–28" },
-          { time:"1:30 PM", emoji:"🏡", name:"Bayou Bend Collection & Gardens", desc:"The estate garden tour is one of Houston's most underrated experiences. 14 acres of formal, woodland, and bayou gardens. Quietly stunning.", price:"$12.50" },
-          { time:"4:00 PM", emoji:"⛳", name:"Topgolf", desc:"1 bay, all 6 of you, 2 hours. Weekend rate ~$50–60/hr per bay = ~$9–11/person per hour. Add cocktails and it's a proper afternoon.", price:"~$20 + food" },
-          { time:"8:00 PM", emoji:"🍷", name:"Dinner + Rooftop", desc:"Dinner at Underbelly Hospitality or Killen's STQ, then rooftop at Reset or 77 Degrees to close the night right.", price:"~$45–60" },
-        ]
-      },
-      {
-        label: "DAY 3", date: "MON · JUN 29",
-        total: "~$130–162 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🚀", name:"Space Center Houston", desc:"Go early to beat crowds. Spend the morning inside — there's legitimately 6+ hours of content. Prioritize: Mission Control replica, Saturn V, astronaut exhibits.", price:"$30 online" },
-          { time:"9:00 AM", emoji:"🚗", name:"Parking", desc:"$10/car split among the group.", price:"~$2" },
-          { time:"1:00 PM", emoji:"🌊", name:"Lunch – Kemah Boardwalk", desc:"10 minutes from Space Center. Sit on the water, eat Gulf shrimp, and let the morning settle. Relaxed and pretty.", price:"~$20–30" },
-          { time:"4:00 PM", emoji:"🔐", name:"Escape Room – Locktopia", desc:"60 minutes. 6 people. A locked room with puzzles between you and freedom. The chaos of a group of friends in an escape room will be a core memory.", price:"$34.50" },
-          { time:"6:30 PM", emoji:"🌮", name:"Dinner – Tex-Mex Houston Classic", desc:"Ninfa's on Navigation (the original Ninfa's, inventor of the fajita as we know it), El Real Tex-Mex, or El Tiempo for a proper Houston experience.", price:"~$28–40" },
-          { time:"9:00 PM", emoji:"🎵", name:"Live Music – White Oak Music Hall", desc:"One of Houston's best live music venues. Outdoor rooftop stage with skyline views. Check their calendar — always something on Monday nights.", price:"~$15–25" },
-        ]
-      },
-      {
-        label: "DAY 4", date: "TUE · JUN 30",
-        total: "~$113–168 / person",
-        activities: [
-          { time:"9:00 AM", emoji:"🎯", name:"Paintball – Urban War Zone", desc:"Save the most chaotic activity for last. Inside the 610 loop, full gear included. Group rate $34.95/person. Come home with bruises and stories.", price:"$34.95" },
-          { time:"12:00 PM", emoji:"🍔", name:"Post-Battle Lunch", desc:"You've earned something ridiculous. Christian's Tailgate, Truth BBQ, or a giant burger at The Burger Joint. Eat like you fought a war — you did.", price:"~$18–25" },
-          { time:"2:30 PM", emoji:"🎨", name:"Menil Collection", desc:"Walk through one of the world's great free art museums. The campus itself — designed by Renzo Piano — is a work of art. Let the morning's chaos settle here.", price:"FREE" },
-          { time:"4:00 PM", emoji:"⬛", name:"Rothko Chapel", desc:"14 massive Rothko paintings in a dimly lit interfaith space. Come in loud from paintball, leave quiet. It's that kind of place.", price:"FREE" },
-          { time:"5:30 PM", emoji:"🛍️", name:"Montrose Exploration", desc:"Houston's most interesting neighborhood. Weird shops, street art, eclectic energy. Perfect for a final wander before the last dinner.", price:"~$0–15" },
-          { time:"7:30 PM", emoji:"🥂", name:"Farewell Dinner", desc:"Ninfa's Original on Navigation, Goode Co. BBQ, or go upscale at Tony's or Brennan's of Houston. Make it count.", price:"~$40–65" },
-          { time:"10:00 PM", emoji:"🌃", name:"Final Drinks – Last Rooftop", desc:"Z on23, 77 Degrees, or Bad News Bar. One last Houston rooftop. Toast the city. It delivered.", price:"~$20–28" },
-        ]
-      }
-    ]
-  }
+/* ====================================================
+   FIREBASE CONFIG — REPLACE WITH YOUR OWN
+   console.firebase.google.com → Project Settings →
+   Your apps → Web app → SDK setup & configuration
+==================================================== */
+const FB_CFG = {
+  apiKey:            "AIzaSyBrzQJ7CpyKCDJpXreFNey525rQs-YDfHo",
+  authDomain:        "blue-tint-getaway.firebaseapp.com",
+  databaseURL:       "https://blue-tint-getaway-default-rtdb.firebaseio.com",
+  projectId:         "blue-tint-getaway",
+  storageBucket:     "blue-tint-getaway.firebasestorage.app",
+  messagingSenderId: "1082273183701",
+  appId:             "1:1082273183701:web:e9fb2c9c0b83b270d72f5c"
 };
 
-// ══════════════════════════════════════════════
-// ROUTING
-// ══════════════════════════════════════════════
-function openItinerary(num) {
-  const data = itineraries[num];
-  if (!data) return;
+/* ====================================================
+   ITINERARY DATA
+==================================================== */
+const ITINS = {
+  1:{num:"ITINERARY 01",title:"Culture Vulture",tagline:"Museums · Gardens · History · Architecture · Art · Fine Dining",color:"#1b9ac4",avg:"~$135/person",total:"~$540/person",days:[
+    {label:"DAY 1",date:"SAT · JUN 27",tot:"~$118–138 / person",acts:[
+      {t:"8:00 AM",e:"🌿",n:"Urban Harvest Farmers Market",d:"100+ vendors at 2752 Buffalo Speedway. Local produce, artisan goods, pastries, fresh coffee. Free to enter — budget for bites.",p:"Free + ~$15"},
+      {t:"10:30 AM",e:"🌸",n:"Hermann Park Japanese Garden",d:"1.5-acre tranquil garden with koi ponds, stone lanterns, moon bridge & bamboo groves.",p:"FREE"},
+      {t:"12:30 PM",e:"🍽️",n:"Lunch – Museum District",d:"Try Hugo's (upscale Mexican), Giacomo's Cibo e Vino, or Reef (Gulf seafood).",p:"~$25–35"},
+      {t:"2:00 PM",e:"🦕",n:"Houston Museum of Natural Science",d:"Gem & Mineral Hall, Ancient Egypt, Fabergé collection, Hall of the Americas. Optional Butterfly Center +$8.",p:"$25 (+$8 opt)"},
+      {t:"5:00 PM",e:"💧",n:"Buffalo Bayou Cistern Tour",d:"Underground 1927 cistern. ‘Undercurrents’ voice-activated light installation. Genuinely surreal.",p:"$15"},
+      {t:"7:00 PM",e:"🌆",n:"Dinner – POST HTX Market",d:"401 Franklin St. Massive food hall in a historic post office. Wood-fired pizza, tacos, ceviches, pasta.",p:"~$25–35"},
+      {t:"9:00 PM",e:"🍹",n:"Rooftop – 77 Degrees or Z on23",d:"77 Degrees has Caribbean vibes and swings. Z on23 at Le Méridien offers 360° panoramas.",p:"~$20–25"},
+    ]},
+    {label:"DAY 2",date:"SUN · JUN 28",tot:"~$122–157 / person",acts:[
+      {t:"9:00 AM",e:"🏛️",n:"Bayou Bend Collection & Gardens",d:"14-acre estate, 28 rooms of American decorative arts + extraordinary formal gardens. Part of MFAH.",p:"$12.50"},
+      {t:"11:30 AM",e:"🍳",n:"Brunch – River Oaks / Upper Kirby",d:"Try Common Bond Bistro, Le Colonial, or Ouisie's Table.",p:"~$25–35"},
+      {t:"1:30 PM",e:"🎨",n:"The Menil Collection",d:"One of the world’s great private art museums — FREE. 16,000+ works spanning Surrealism, Antiquity, and modern art.",p:"FREE"},
+      {t:"3:30 PM",e:"⬛",n:"Rothko Chapel",d:"14 monumental Rothko paintings inside an octagonal interfaith chapel. Unlike anything else on Earth.",p:"FREE"},
+      {t:"5:00 PM",e:"🏘️",n:"Explore Montrose Neighborhood",d:"Houston’s most eclectic neighborhood. Local boutiques, wild street art, great coffee shops.",p:"~$0–10"},
+      {t:"7:00 PM",e:"🍜",n:"Dinner – Montrose",d:"Underbelly, Xochi (Oaxacan), or Uchi Houston (Japanese). Book ahead!",p:"~$45–60"},
+      {t:"9:30 PM",e:"😂",n:"Houston Improv Comedy Club",d:"National touring acts + local talent at Houston’s premier comedy venue.",p:"~$20–30"},
+    ]},
+    {label:"DAY 3",date:"MON · JUN 29",tot:"~$122–142 / person",acts:[
+      {t:"9:00 AM",e:"🚀",n:"Space Center Houston",d:"Official NASA visitor center. Moon rocks, astronaut suits, Mission Control replica, Saturn V rocket.",p:"$30 online"},
+      {t:"9:00 AM",e:"🚗",n:"Parking",d:"~$10/car split among the group.",p:"~$2"},
+      {t:"12:30 PM",e:"🥪",n:"Lunch – On-site or Kemah Boardwalk",d:"10 min from Space Center. Waterfront Gulf seafood dining.",p:"~$15–20"},
+      {t:"2:30 PM",e:"🕹️",n:"Space Center Simulators",d:"Astronaut training simulators and VR moon walk experiences.",p:"~$10 add-on"},
+      {t:"5:30 PM",e:"🔐",n:"Escape Room – Locktopia Houston",d:"60-min immersive puzzle challenge for a group of 6. Book in advance!",p:"$34.50"},
+      {t:"8:00 PM",e:"🍖",n:"Dinner – Houston BBQ or Tex-Mex",d:"Goode Co. BBQ, Ninfa’s on Navigation, or Killen’s Barbecue.",p:"~$30–45"},
+    ]},
+    {label:"DAY 4",date:"TUE · JUN 30",tot:"~$130–158 / person",acts:[
+      {t:"9:00 AM",e:"🚣",n:"Buffalo Bayou Kayaking",d:"Rent kayaks at 1019 Commerce St. Paddle downtown Houston’s waterways with skyline views.",p:"$35"},
+      {t:"11:30 AM",e:"☕",n:"Brunch – Houston Heights",d:"Try Coltivare or Snooze AM Eatery for a relaxed farewell brunch.",p:"~$20–28"},
+      {t:"1:30 PM",e:"🎨",n:"East End Street Art Tour",d:"Self-guided walk along Harrisburg Blvd. Houston’s most vibrant murals. Completely free.",p:"FREE"},
+      {t:"3:30 PM",e:"⛳",n:"Topgolf Houston",d:"1 bay fits all 6. ~$9–11/person/hr. 2 hrs of play, food, drinks.",p:"~$20 + food"},
+      {t:"7:00 PM",e:"🥂",n:"Farewell Dinner",d:"Brennan’s of Houston, Caracol (coastal Mexican), or Tony’s (since 1965).",p:"~$55–75"},
+    ]},
+  ]},
+  2:{num:"ITINERARY 02",title:"Full Throttle",tagline:"Paintball · Kayaking · Escape Room · Topgolf · Space Center · Baseball",color:"#c0392b",avg:"~$165/person",total:"~$660/person",days:[
+    {label:"DAY 1",date:"SAT · JUN 27",tot:"~$148–200 / person",acts:[
+      {t:"8:00 AM",e:"🌿",n:"Urban Harvest Farmers Market",d:"Load up on fuel. Breakfast tacos, smoothies, pastries. You’ll need the energy.",p:"Free + ~$15"},
+      {t:"10:30 AM",e:"🎯",n:"Urban War Zone Paintball",d:"The ONLY field inside the 610 loop. Full gear, unlimited play. Group rate $34.95/person.",p:"$34.95"},
+      {t:"1:30 PM",e:"🍔",n:"Post-Battle Lunch",d:"Christian’s Tailgate, The Burger Joint, or Truth BBQ if you’re going big.",p:"~$18–25"},
+      {t:"3:30 PM",e:"🚣",n:"Buffalo Bayou Kayaking",d:"Cool off on the water. Rent kayaks at 1019 Commerce St. Downtown skyline from water level.",p:"$35"},
+      {t:"6:30 PM",e:"⚾",n:"Houston Astros Game",d:"If the Astros are home (verify at mlb.com/astros), Daikin Park is fantastic.",p:"$25–60"},
+      {t:"10:00 PM",e:"🍻",n:"Post-Game Rooftop",d:"The Dogwood (Midtown) or Reset Rooftop for premium hookah and cocktails.",p:"~$20–30"},
+    ]},
+    {label:"DAY 2",date:"SUN · JUN 28",tot:"~$133–170 / person",acts:[
+      {t:"7:00 AM",e:"🏃",n:"Buffalo Bayou Trail Run",d:"6+ miles of paved trails. Beautiful at sunrise. Bike rentals also available (~$15/hr).",p:"Free"},
+      {t:"9:30 AM",e:"🍽️",n:"Brunch – POST HTX Market",d:"Recover with great food from around the world. The building itself is jaw-dropping.",p:"~$20–30"},
+      {t:"11:30 AM",e:"⛳",n:"Topgolf",d:"1 bay fits all 6. ~$9/person/hr. 2–3 hours, cocktails, trash-talk everyone’s swing.",p:"~$18–28 + food"},
+      {t:"3:00 PM",e:"🔐",n:"Escape Room – The Escape Game",d:"Rated #1 in Houston. Cinematic rooms. 60 minutes of pure team chaos.",p:"$37"},
+      {t:"5:30 PM",e:"🪣",n:"Axe Throwing",d:"Stumpy’s Hatchet House or Bury the Hatchet. ~$30/person, 1-hr session with instruction.",p:"~$28–35"},
+      {t:"8:00 PM",e:"🍺",n:"Sports Bar Dinner",d:"Pitch 25 Beer Park or The Rustic Houston for massive outdoor space.",p:"~$30–40"},
+    ]},
+    {label:"DAY 3",date:"MON · JUN 29",tot:"~$142–188 / person",acts:[
+      {t:"9:00 AM",e:"🚀",n:"Space Center Houston",d:"Even the most competitive group goes quiet under a Saturn V rocket. 363 feet. Humans rode it to the moon.",p:"$30 online"},
+      {t:"9:00 AM",e:"🚗",n:"Parking",d:"~$10/car split 6 ways.",p:"~$2"},
+      {t:"12:30 PM",e:"🌊",n:"Lunch – Kemah Boardwalk",d:"10 min from Space Center. Waterfront dining, arcade games, shrimp po’boys.",p:"~$20–28"},
+      {t:"3:00 PM",e:"🎮",n:"Main Event Entertainment",d:"Bowling, laser tag, arcade, billiards, ropes course. Perfect competitive chaos.",p:"~$30–45"},
+      {t:"7:00 PM",e:"🍗",n:"Dinner",d:"Killen’s STQ, Pappas Bros., or Peli Peli for South African cuisine.",p:"~$40–55"},
+      {t:"9:30 PM",e:"😂",n:"Houston Improv Comedy",d:"National touring acts. Let a comedian roast the city while your group recovers.",p:"~$20–28"},
+    ]},
+    {label:"DAY 4",date:"TUE · JUN 30",tot:"~$139–192 / person",acts:[
+      {t:"8:00 AM",e:"🌅",n:"Spotts Park Workout",d:"Outdoor fitness area along Buffalo Bayou. Free and beautiful in the morning.",p:"FREE"},
+      {t:"9:30 AM",e:"🌸",n:"Hermann Park Pedal Boats + Japanese Garden",d:"Rent pedal boats on McGovern Lake. Then walk the Japanese Garden.",p:"~$8–12"},
+      {t:"11:30 AM",e:"🥞",n:"Brunch – Museum District",d:"Local Foods, Snooze AM Eatery, or Juiceland for a lighter healthy brunch.",p:"~$18–25"},
+      {t:"1:30 PM",e:"🏎️",n:"Indoor Go-Kart Racing – K1 Speed",d:"Professional electric karts. This will get competitive extremely fast.",p:"~$28–35"},
+      {t:"4:30 PM",e:"🏆",n:"Championship Round – You Decide",d:"Bowling, billiards, or a final round of axe throwing. Crown the group champion.",p:"~$20–30"},
+      {t:"7:30 PM",e:"🥩",n:"Farewell Steakhouse",d:"Pappas Bros., Doris Metropolitan, or B&B Butchers. Houston has elite steakhouses.",p:"~$65–90"},
+    ]},
+  ]},
+  3:{num:"ITINERARY 03",title:"Foodie & Social",tagline:"Farmers Market · Food Halls · Culinary Experiences · Rooftops · Craft Beer",color:"#d4711a",avg:"~$158/person",total:"~$632/person",days:[
+    {label:"DAY 1",date:"SAT · JUN 27",tot:"~$123–175 / person",acts:[
+      {t:"8:00 AM",e:"🥕",n:"Urban Harvest Farmers Market",d:"100+ vendors, local honey, artisan cheeses, handmade bread, fresh peaches, breakfast tacos.",p:"Free + ~$20–30"},
+      {t:"10:30 AM",e:"☕",n:"Heights Coffee Crawl",d:"Greenway Coffee, Birdhouse Coffee, or Onion Creek. Walk antique shops between stops.",p:"~$8–12"},
+      {t:"12:30 PM",e:"🌺",n:"Hermann Park Japanese Garden",d:"Detour before lunch. Free, beautiful, great photos.",p:"FREE"},
+      {t:"2:00 PM",e:"🌮",n:"POST HTX Market – Afternoon Tasting",d:"Pick a different cuisine every 30 minutes. 550,000 sq ft adaptive reuse of Houston’s post office.",p:"~$30–45"},
+      {t:"5:00 PM",e:"🎭",n:"Discovery Green Park",d:"12-acre urban park with free live music, outdoor art, and a peaceful lagoon.",p:"FREE"},
+      {t:"7:00 PM",e:"🍸",n:"Dinner – Lawless Spirits & Kitchen",d:"Historic Rice Hotel. Sophisticated cocktails meet New American cuisine with a downtown terrace.",p:"~$45–60"},
+      {t:"10:00 PM",e:"🌃",n:"77 Degrees Rooftop",d:"Multi-level rooftop, Caribbean vibes, cabanas, swings, one of the best skyline views in Houston.",p:"~$20–28"},
+    ]},
+    {label:"DAY 2",date:"SUN · JUN 28",tot:"~$110–160 / person",acts:[
+      {t:"10:00 AM",e:"🏡",n:"Bayou Bend Collection & Gardens",d:"14-acre estate with formal gardens and American decorative arts.",p:"$12.50"},
+      {t:"12:00 PM",e:"🥂",n:"Brunch – River Oaks",d:"Le Colonial (French-Vietnamese), Tony’s Sunday brunch, or Ouisie’s Table.",p:"~$35–50"},
+      {t:"2:30 PM",e:"🎨",n:"Menil Collection + Rothko Chapel",d:"Two of Houston’s greatest free cultural institutions. The Rothko Chapel is genuinely life-altering.",p:"FREE"},
+      {t:"5:00 PM",e:"🍺",n:"Saint Arnold Brewing Company Tour",d:"Texas’s oldest craft brewery. Tour includes tastings. Great beer garden.",p:"~$12–18"},
+      {t:"7:30 PM",e:"🌶️",n:"Dinner – EaDo (East Downtown)",d:"Nancy’s Hustle, Mongoose vs. Cobra, or Johnny’s Gold Brick.",p:"~$35–50"},
+      {t:"9:30 PM",e:"🎤",n:"Live Music – White Oak Music Hall",d:"Multi-stage outdoor venue. Rooftop stage has incredible skyline views.",p:"~$15–30"},
+    ]},
+    {label:"DAY 3",date:"MON · JUN 29",tot:"~$158–238 / person",acts:[
+      {t:"9:30 AM",e:"👨‍🍳",n:"Cooking Class",d:"Central Market Cooking School, Sur La Table, or private chef. Learn Gulf seafood, Tex-Mex, or Texas BBQ.",p:"~$65–90"},
+      {t:"12:30 PM",e:"🍽️",n:"Lunch – Eat What You Made",d:"Most cooking classes include eating your creations. Included in class price.",p:"Included"},
+      {t:"3:00 PM",e:"💧",n:"Buffalo Bayou Cistern",d:"The ‘Undercurrents’ installation makes your voice create rippling light patterns on the water.",p:"$15"},
+      {t:"4:30 PM",e:"🛒",n:"Heights Antique Row",d:"19th Street lined with antique dealers, vintage clothing, and local boutiques.",p:"~$0–20"},
+      {t:"7:00 PM",e:"🍸",n:"Cocktail Hour – Anvil Bar & Refuge",d:"Anvil built Houston’s cocktail culture. A round here is mandatory for serious drinkers.",p:"~$18–28"},
+      {t:"8:30 PM",e:"🦞",n:"Upscale Dinner",d:"Uchi Houston (Japanese), Caracol (coastal Mexican), or Xochi (Oaxacan). Book weeks in advance for Uchi.",p:"~$60–85"},
+    ]},
+    {label:"DAY 4",date:"TUE · JUN 30",tot:"~$160–207 / person",acts:[
+      {t:"8:30 AM",e:"🌮",n:"Breakfast Taco Tour",d:"Three stops, three taquerias. El Tiempo, Laredo Taqueria, Las Delicias. Vote on the winner.",p:"~$15–22"},
+      {t:"10:30 AM",e:"🏛️",n:"Museum of Fine Arts Houston",d:"One of the largest art museums in the US. A genuinely great collection.",p:"~$20"},
+      {t:"1:00 PM",e:"🥗",n:"Lunch – Midtown",d:"Underbelly Burger, Truth BBQ, or Weights + Measures.",p:"~$18–28"},
+      {t:"3:00 PM",e:"🔐",n:"Escape Room",d:"Locktopia ($34.50) or The Escape Game ($37). End the trip with a team challenge.",p:"$34.50–37"},
+      {t:"6:00 PM",e:"🌆",n:"Sunset – Best Rooftop",d:"Z on23 at Le Méridien or Spire Bar at Hotel Alessandra for golden hour cocktails.",p:"~$18–25"},
+      {t:"8:00 PM",e:"🎉",n:"Progressive Farewell Dinner",d:"3 stops: drinks & apps at one spot, mains at a second, dessert at a third.",p:"~$55–75"},
+    ]},
+  ]},
+  4:{num:"ITINERARY 04",title:"Vibe & Flow",tagline:"Balanced · Active · Cultural · Beautiful · Relaxed · Funny · Social",color:"#27a060",avg:"~$130/person",total:"~$520/person",days:[
+    {label:"DAY 1",date:"SAT · JUN 27",tot:"~$110–153 / person",acts:[
+      {t:"8:00 AM",e:"🌿",n:"Urban Harvest Farmers Market",d:"Saturday-only at 2752 Buffalo Speedway. Coffee, pastries, produce. Mood-setter for the whole trip.",p:"Free + ~$15"},
+      {t:"10:30 AM",e:"🚣",n:"Buffalo Bayou Kayaking",d:"Paddle Houston’s iconic waterway. Downtown skyline, wildlife, murals from the water.",p:"$35"},
+      {t:"1:00 PM",e:"☕",n:"Lunch – Houston Heights",d:"Coltivare (pizza + garden), Bravery Chef Hall, or tacos at Velvet Taco.",p:"~$20–28"},
+      {t:"3:00 PM",e:"💧",n:"Buffalo Bayou Cistern",d:"Same waterway, but underground from 1927. ‘Undercurrents’ art installation.",p:"$15"},
+      {t:"5:00 PM",e:"🌳",n:"Buffalo Bayou Park Walk",d:"Public art, dog spotting, and casual skyline views. Decompress.",p:"FREE"},
+      {t:"7:30 PM",e:"⚾",n:"Astros Game or POST HTX Market",d:"If the Astros are home: go. Nothing more Houston. Otherwise POST HTX Market + rooftop.",p:"$25–60 or $25–35"},
+    ]},
+    {label:"DAY 2",date:"SUN · JUN 28",tot:"~$115–165 / person",acts:[
+      {t:"9:00 AM",e:"🏃",n:"Hermann Park Morning Jog or Bike",d:"445 acres of parkland, jogging paths, reflection pool. Bike rentals available (~$15–20/hr).",p:"Free or ~$15"},
+      {t:"10:30 AM",e:"🌸",n:"Japanese Garden",d:"Cool down after the jog. Koi ponds, stone paths, bamboo groves. Genuinely restorative.",p:"FREE"},
+      {t:"12:00 PM",e:"🥩",n:"Lunch – Museum District",d:"Local Foods, The Pit Room (BBQ), or Black Walnut Café.",p:"~$18–28"},
+      {t:"1:30 PM",e:"🏡",n:"Bayou Bend Collection & Gardens",d:"14 acres of formal, woodland, and bayou gardens. Quietly stunning.",p:"$12.50"},
+      {t:"4:00 PM",e:"⛳",n:"Topgolf",d:"1 bay, all 6 of you, 2 hours. ~$9–11/person/hr. Add cocktails and it’s a proper afternoon.",p:"~$20 + food"},
+      {t:"8:00 PM",e:"🍷",n:"Dinner + Rooftop",d:"Underbelly Hospitality or Killen’s STQ, then Reset or 77 Degrees to close the night.",p:"~$45–60"},
+    ]},
+    {label:"DAY 3",date:"MON · JUN 29",tot:"~$130–162 / person",acts:[
+      {t:"9:00 AM",e:"🚀",n:"Space Center Houston",d:"Go early. 6+ hours of content. Must-see: Mission Control, Saturn V, astronaut exhibits.",p:"$30 online"},
+      {t:"9:00 AM",e:"🚗",n:"Parking",d:"$10/car split among the group.",p:"~$2"},
+      {t:"1:00 PM",e:"🌊",n:"Lunch – Kemah Boardwalk",d:"Sit on the water, eat Gulf shrimp, let the morning settle.",p:"~$20–30"},
+      {t:"4:00 PM",e:"🔐",n:"Escape Room – Locktopia",d:"60 minutes. 6 people. The chaos of your friend group in an escape room is cinema.",p:"$34.50"},
+      {t:"6:30 PM",e:"🌮",n:"Dinner – Tex-Mex Houston Classic",d:"Ninfa’s on Navigation (inventor of the fajita), El Real Tex-Mex, or El Tiempo.",p:"~$28–40"},
+      {t:"9:00 PM",e:"🎵",n:"Live Music – White Oak Music Hall",d:"Rooftop stage with skyline views. Always something on Monday nights.",p:"~$15–25"},
+    ]},
+    {label:"DAY 4",date:"TUE · JUN 30",tot:"~$113–168 / person",acts:[
+      {t:"9:00 AM",e:"🎯",n:"Paintball – Urban War Zone",d:"Save the most chaotic activity for last. Full gear included. $34.95/person. Come home with bruises.",p:"$34.95"},
+      {t:"12:00 PM",e:"🍔",n:"Post-Battle Lunch",d:"Christian’s Tailgate, Truth BBQ, or The Burger Joint. Eat like you fought a war — you did.",p:"~$18–25"},
+      {t:"2:30 PM",e:"🎨",n:"Menil Collection",d:"One of the world’s great free art museums. Let the morning’s chaos settle here.",p:"FREE"},
+      {t:"4:00 PM",e:"⬛",n:"Rothko Chapel",d:"Come in loud from paintball, leave quiet. It’s that kind of place.",p:"FREE"},
+      {t:"5:30 PM",e:"🛒",n:"Montrose Exploration",d:"Weird shops, street art, eclectic energy. Final wander before the last dinner.",p:"~$0–15"},
+      {t:"7:30 PM",e:"🥂",n:"Farewell Dinner",d:"Ninfa’s Original, Goode Co. BBQ, Tony’s, or Brennan’s of Houston. Make it count.",p:"~$40–65"},
+      {t:"10:00 PM",e:"🌃",n:"Final Drinks – Last Rooftop",d:"Z on23, 77 Degrees, or Bad News Bar. One last Houston rooftop. Toast the city.",p:"~$20–28"},
+    ]},
+  ]},
+};
 
-  // Set theme color
-  document.getElementById('detail').style.setProperty('--theme-color', data.color);
+/* ====================================================
+   FIREBASE INIT
+==================================================== */
+let db=null,fbReady=false;
+const fbn=document.getElementById('fbn');
+try{
+  firebase.initializeApp(FB_CFG);
+  db=firebase.database();
+  fbReady=true;
+  fbn.style.display='none';
 
-  // Populate header
-  document.getElementById('detail-num').textContent = data.num;
-  document.getElementById('detail-title').textContent = data.title;
-  document.getElementById('detail-tagline').textContent = data.tagline;
-  document.getElementById('detail-avg').textContent = data.avg;
-  document.getElementById('detail-total').textContent = data.total;
-  document.getElementById('back-bar-title').textContent = data.title;
-
-  // Populate days
-  const wrapper = document.getElementById('days-wrapper');
-  wrapper.innerHTML = '';
-
-  data.days.forEach((day, di) => {
-    const block = document.createElement('div');
-    block.className = 'day-block fade-in';
-    block.style.animationDelay = `${di * 0.08}s`;
-
-    // Day header
-    const header = document.createElement('div');
-    header.className = 'day-header';
-    header.innerHTML = `
-      <span class="day-badge">${day.label}</span>
-      <span class="day-date">${day.date}</span>
-      <span class="day-total">${day.total}</span>
-    `;
-    block.appendChild(header);
-
-    // Activity list
-    const list = document.createElement('div');
-    list.className = 'activity-list';
-
-    day.activities.forEach(act => {
-      const row = document.createElement('div');
-      row.className = 'activity-row';
-      row.innerHTML = `
-        <div class="act-time">${act.time}</div>
-        <div class="act-body">
-          <div class="act-name"><span class="emoji">${act.emoji}</span>${act.name}</div>
-          <div class="act-desc">${act.desc}</div>
-        </div>
-        <div class="act-price">${act.price}</div>
-      `;
-      list.appendChild(row);
+  // Live: itinerary vote counts
+  db.ref('itinVotes').on('value',snap=>{
+    const d=snap.val()||{};
+    let tot=0;
+    [1,2,3,4].forEach(n=>{
+      const c=d[n]||0;
+      document.getElementById('vc'+n).textContent=c;
+      document.getElementById('t'+n).textContent=c;
+      tot+=c;
     });
-
-    block.appendChild(list);
-    wrapper.appendChild(block);
+    document.getElementById('tally-bar').style.display=tot>0?'flex':'none';
   });
 
-  // Push hash and show detail
-  history.pushState({ itinerary: num }, '', `#itinerary-${num}`);
+  // Live: ideas board
+  db.ref('ideas').orderByChild('ts').on('value',snap=>{
+    const il=document.getElementById('ideas-list');
+    const ie=document.getElementById('ideas-empty');
+    const data=snap.val();
+    if(!data){ie.style.display='block';return;}
+    ie.style.display='none';
+    const items=Object.entries(data).map(([k,v])=>({id:k,...v}));
+    items.sort((a,b)=>(b.ts||0)-(a.ts||0));
+    il.innerHTML='';
+    const liked=JSON.parse(localStorage.getItem('iLikes')||'{}');
+    items.forEach(item=>{
+      const isLiked=!!liked[item.id];
+      const el=document.createElement('div');
+      el.className='idea-item';
+      el.innerHTML=`<div class="idea-content"><div class="idea-text">${esc(item.text)}</div><div class="idea-meta">by <strong>${esc(item.name||'Anonymous')}</strong> &middot; ${ago(item.ts)}</div></div><button class="like-btn${isLiked?' liked':''}" onclick="likeIdea('${item.id}',${isLiked})"><span class="like-icon">&#10084;&#65039;</span><span class="like-count">${item.likes||0}</span></button>`;
+      il.appendChild(el);
+    });
+  });
+}catch(err){
+  fbn.textContent='⚠️ Firebase not connected — add your config to enable live voting.';
+  fbn.classList.add('err');
+  fbn.style.display='block';
+}
+
+/* ====================================================
+   ITINERARY VOTING
+==================================================== */
+function voteItin(e,n){
+  e.stopPropagation();
+  if(!fbReady){alert('Add your Firebase config to enable voting.');return;}
+  const mv=localStorage.getItem('itinVote');
+  if(mv==n){
+    db.ref('itinVotes/'+n).transaction(v=>Math.max((v||0)-1,0));
+    localStorage.removeItem('itinVote');
+    [1,2,3,4].forEach(x=>document.getElementById('vb'+x).classList.remove('voted'));
+    return;
+  }
+  if(mv){
+    db.ref('itinVotes/'+mv).transaction(v=>Math.max((v||0)-1,0));
+    document.getElementById('vb'+mv).classList.remove('voted');
+  }
+  db.ref('itinVotes/'+n).transaction(v=>(v||0)+1);
+  localStorage.setItem('itinVote',n);
+  [1,2,3,4].forEach(x=>document.getElementById('vb'+x).classList.remove('voted'));
+  document.getElementById('vb'+n).classList.add('voted');
+}
+
+/* ====================================================
+   ACTIVITY THUMB VOTING
+==================================================== */
+function thumbVote(iNum,dIdx,aIdx,dir){
+  if(!fbReady)return;
+  const key=`i${iNum}_d${dIdx}_a${aIdx}`;
+  const stored=JSON.parse(localStorage.getItem('aVotes')||'{}');
+  const cur=stored[key];
+  const ref=db.ref('aVotes/'+key);
+  if(cur===dir){
+    ref.transaction(v=>{const d=v||{};d[dir]=Math.max((d[dir]||0)-1,0);return d;});
+    delete stored[key];
+  }else{
+    if(cur){ref.transaction(v=>{const d=v||{};d[cur]=Math.max((d[cur]||0)-1,0);d[dir]=(d[dir]||0)+1;return d;});}
+    else{ref.transaction(v=>{const d=v||{};d[dir]=(d[dir]||0)+1;return d;});}
+    stored[key]=dir;
+  }
+  localStorage.setItem('aVotes',JSON.stringify(stored));
+  refreshThumb(iNum,dIdx,aIdx,stored[key]);
+}
+
+function refreshThumb(iNum,dIdx,aIdx,myDir){
+  const u=document.getElementById(`tu_i${iNum}d${dIdx}a${aIdx}`);
+  const dn=document.getElementById(`td_i${iNum}d${dIdx}a${aIdx}`);
+  if(!u||!dn)return;
+  u.classList.toggle('up',myDir==='up');
+  dn.classList.toggle('dn',myDir==='down');
+}
+
+function listenActs(iNum){
+  if(!fbReady)return;
+  db.ref('aVotes').on('value',snap=>{
+    const all=snap.val()||{};
+    const stored=JSON.parse(localStorage.getItem('aVotes')||'{}');
+    ITINS[iNum].days.forEach((day,dIdx)=>{
+      day.acts.forEach((_,aIdx)=>{
+        const key=`i${iNum}_d${dIdx}_a${aIdx}`;
+        const v=all[key]||{};
+        const uel=document.getElementById(`tu_i${iNum}d${dIdx}a${aIdx}`);
+        const del=document.getElementById(`td_i${iNum}d${dIdx}a${aIdx}`);
+        if(uel)uel.querySelector('.tc').textContent=v.up||0;
+        if(del)del.querySelector('.tc').textContent=v.down||0;
+        refreshThumb(iNum,dIdx,aIdx,stored[key]);
+      });
+    });
+  });
+}
+
+/* ====================================================
+   IDEAS BOARD
+==================================================== */
+function submitIdea(){
+  if(!fbReady){alert('Add your Firebase config to enable idea submissions.');return;}
+  const text=document.getElementById('itext').value.trim();
+  const name=document.getElementById('iname').value.trim();
+  if(!text){document.getElementById('itext').focus();return;}
+  const btn=document.getElementById('sbtn');
+  btn.disabled=true;
+  db.ref('ideas').push({text,name:name||'Anonymous',ts:Date.now(),likes:0})
+    .then(()=>{document.getElementById('itext').value='';btn.disabled=false;})
+    .catch(()=>btn.disabled=false);
+}
+
+function likeIdea(id,alreadyLiked){
+  if(!fbReady)return;
+  const stored=JSON.parse(localStorage.getItem('iLikes')||'{}');
+  if(alreadyLiked){
+    db.ref('ideas/'+id+'/likes').transaction(v=>Math.max((v||0)-1,0));
+    delete stored[id];
+  }else{
+    db.ref('ideas/'+id+'/likes').transaction(v=>(v||0)+1);
+    stored[id]=true;
+  }
+  localStorage.setItem('iLikes',JSON.stringify(stored));
+}
+
+document.getElementById('itext').addEventListener('keydown',e=>{if(e.key==='Enter')submitIdea();});
+
+/* ====================================================
+   ROUTING
+==================================================== */
+function openItin(num){
+  const data=ITINS[num];
+  if(!data)return;
+  document.getElementById('detail').style.setProperty('--tc',data.color);
+  document.getElementById('dnum').textContent=data.num;
+  document.getElementById('dtitle').textContent=data.title;
+  document.getElementById('dtagline').textContent=data.tagline;
+  document.getElementById('davg').textContent=data.avg;
+  document.getElementById('dtot').textContent=data.total;
+  document.getElementById('bbt').textContent=data.title;
+
+  // Restore itinerary vote state
+  const mv=localStorage.getItem('itinVote');
+  [1,2,3,4].forEach(n=>document.getElementById('vb'+n)?.classList.toggle('voted',mv==n));
+
+  // Build days
+  const wrap=document.getElementById('days-wrap');
+  wrap.innerHTML='';
+  const stored=JSON.parse(localStorage.getItem('aVotes')||'{}');
+  data.days.forEach((day,dIdx)=>{
+    const blk=document.createElement('div');
+    blk.className='fi';blk.style.animationDelay=`${dIdx*.07}s`;
+    const hdr=document.createElement('div');hdr.className='day-hdr';
+    hdr.innerHTML=`<span class="day-badge">${day.label}</span><span class="day-date">${day.date}</span><span class="day-total">${day.tot}</span>`;
+    blk.appendChild(hdr);
+    const ul=document.createElement('div');ul.className='act-list';
+    day.acts.forEach((act,aIdx)=>{
+      const key=`i${num}_d${dIdx}_a${aIdx}`;
+      const myDir=stored[key];
+      const row=document.createElement('div');row.className='act-row';
+      row.innerHTML=`<div class="act-time">${act.t}</div><div class="act-body"><div class="act-name">${act.e} ${act.n}</div><div class="act-desc">${act.d}</div></div><div class="act-right"><div class="act-price">${act.p}</div><div class="act-votes"><button class="tb${myDir==='up'?' up':''}" id="tu_i${num}d${dIdx}a${aIdx}" onclick="thumbVote(${num},${dIdx},${aIdx},'up')" title="Love it">&#128077;<span class="tc">0</span></button><button class="tb${myDir==='down'?' dn':''}" id="td_i${num}d${dIdx}a${aIdx}" onclick="thumbVote(${num},${dIdx},${aIdx},'down')" title="Pass">&#128078;<span class="tc">0</span></button></div></div>`;
+      ul.appendChild(row);
+    });
+    blk.appendChild(ul);wrap.appendChild(blk);
+  });
+
+  listenActs(num);
+  history.pushState({itin:num},'',`#itinerary-${num}`);
   showView('detail');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
-function goBack() {
-  history.back();
-}
+function goBack(){history.back();}
 
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// Handle browser back/forward
-window.addEventListener('popstate', function(e) {
-  if (e.state && e.state.itinerary) {
-    openItinerary(e.state.itinerary);
-  } else {
-    showView('landing');
-    window.scrollTo(0, 0);
-  }
+window.addEventListener('popstate',e=>{
+  if(e.state&&e.state.itin)openItin(e.state.itin);
+  else{showView('landing');window.scrollTo(0,0);}
 });
 
-// Handle direct hash navigation (e.g., page reload on #itinerary-2)
-window.addEventListener('DOMContentLoaded', function() {
-  const hash = window.location.hash;
-  const match = hash.match(/^#itinerary-(\d)$/);
-  if (match) {
-    openItinerary(parseInt(match[1]));
-  }
+window.addEventListener('DOMContentLoaded',()=>{
+  const m=location.hash.match(/^#itinerary-(\d)$/);
+  if(m)openItin(parseInt(m[1]));
+  const mv=localStorage.getItem('itinVote');
+  if(mv)document.getElementById('vb'+mv)?.classList.add('voted');
 });
+
+/* ====================================================
+   UTILS
+==================================================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ago(ts){const d=Math.floor((Date.now()-ts)/1000);if(d<60)return'just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return Math.floor(d/86400)+'d ago';}
 </script>
 </body>
 </html>
